@@ -8,3 +8,4 @@ bitsadmin /TRANSFER job1 /PRIORITY HIGH https://opengameart.org/sites/default/fi
 bitsadmin /TRANSFER job1 /PRIORITY HIGH https://opengameart.org/sites/default/files/RockWall%%28orFloor%%29_normal.png %~dp0downloads/RockWall_orFloor_normal.png
 bitsadmin /TRANSFER job1 /PRIORITY HIGH https://opengameart.org/sites/default/files/RockWall%%28orFloor%%29_height.png %~dp0downloads/RockWall_orFloor_height.png
 bitsadmin /TRANSFER job1 /PRIORITY HIGH https://opengameart.org/sites/default/files/RockWall%%28orFloor%%29_specular.png %~dp0downloads/RockWall_orFloor_specular.png
+pause
