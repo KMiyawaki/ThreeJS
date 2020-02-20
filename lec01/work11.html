@@ -72,8 +72,18 @@
                 orbitControls.update(deltaTime);
                 renderer.render(scene, camera);
                 requestAnimationFrame(renderFrame);
+                divDebugText.scrollTop = divDebugText.scrollHeight;
             }
             renderFrame();
+
+            /* 画面サイズ変更時の処理 */
+            const onResize = function () {
+                divDebugText.value += ("ViewPort: " + window.innerWidth + "," + window.innerHeight + "\n");
+                const glViewSize = divGlView.getBoundingClientRect();
+                renderer.setSize(glViewSize.width, glViewSize.height);
+                camera.aspect = glViewSize.width / glViewSize.height;
+                camera.updateProjectionMatrix();
+            }
             window.addEventListener('resize', onResize);
         }
         window.addEventListener('load', init);
