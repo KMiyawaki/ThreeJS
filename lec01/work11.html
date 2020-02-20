@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scene</title>
+    <script type="text/javascript" src="../js/three.min.js"></script>
+    <script type="text/javascript" src="../js/OrbitControls.js"></script>
+    <script type="text/javascript" src="../js/myThree2020.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+</head>
+
+<body>
+    <div id="screen" class="screen">
+        <div id="glView" style="position: relative;height: 100%;">
+            <!--textarea id="debugText" rows="8" cols="20" class="debugText" style="display: none;">Debug output</textarea> デバッグ用表示を無くしたいときはこちらを有効にする。-->
+            <textarea id="debugText" rows="8" cols="20" class="debugText">Debug output</textarea>
+        </div>
+    </div>
+    <script type="text/javascript">
+        const init = function () {
+            /* 主要な HTML 要素の取得 */
+            const divScreen = document.getElementById("screen");
+            const divGlView = document.getElementById("glView");
+            const divDebugText = document.getElementById("debugText");
+
+            /* デバッグ用の出力 */
+            divDebugText.value = ("ViewPort: " + window.innerWidth + "," + window.innerHeight + "\n");
+
+            /* THREE.js の初期化 */
+            const [scene, camera, renderer, clock, axes] = mylib2020.initThreeInElement(divGlView);
+            camera.position.set(5, 5, 5);
+
+            /* 平面の生成 */
+            const plane = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshPhongMaterial({ color: 0xCCFFCC }));
+            plane.rotateX(THREE.Math.degToRad(-90)); /* X 軸中心に90度回転 */
+            plane.receiveShadow = true; /* 他の物体の影が落ちる */
+            scene.add(plane);
+
+            /* 平面の生成 */
+            const cubeGeometry = new THREE.BoxGeometry(3, 3, 3); /* Geometry の生成を分けて書くこともできる */
+            const cubeMaterial = new THREE.MeshPhongMaterial({ color: 0xFF0000 }); /* Material の生成を分けて書くこともできる */
+            const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+            cube.castShadow = true; /* 他の物体に影を落とす */
+            cube.receiveShadow = true; /* 他の物体から影が落ちる */
+            scene.add(cube);
+
+            /* 球体の生成 */
+            const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 20, 20), new THREE.MeshPhongMaterial({ color: 0x0000FF, wireframe: false }));
+            sphere.position.set(3, 3, 3); /* 座標(3,3,3)に移動 */
+            sphere.castShadow = true; /* 他の物体に影を落とす */
+            scene.add(sphere);
+
+            /* 平行光源の生成 */
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0); /* 色は白、強さは 1.0 */
+            directionalLight.castShadow = true; /* 他の物体に影を落とす */
+            directionalLight.position.set(5, 5, 5);        /* 座標(5,5,5)から */
+            directionalLight.target.position.set(0, 0, 0); /* 座標(0,0,0)に照射 */
+            scene.add(directionalLight);        /* ライト本体と */
+            scene.add(directionalLight.target); /* 照射ターゲットもシーンに追加する必要がある */
+
+            /* マウスコントローラの追加 */
+            /* THREE.js 本体には含まれていないことに注意 */
+            const orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+            orbitControls.update();
+
+            /* アニメーションのための描画更新処理 */
+            function renderFrame() {
+                const deltaTime = clock.getDelta(); /* 前フレームからの経過時間。物体の移動に使う。 */
+                orbitControls.update(deltaTime);
+                renderer.render(scene, camera);
+                requestAnimationFrame(renderFrame);
+            }
+            renderFrame();
+            window.addEventListener('resize', onResize);
+        }
+        window.addEventListener('load', init);
+    </script>
+</body>
