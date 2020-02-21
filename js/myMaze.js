@@ -14,7 +14,7 @@ const MyMazeTestData = [
     1, 1, 1, 1, 1
 ];
 
-MyMaze = class {
+class MyMaze{
     constructor(mapData, width, height, geometry, material, cubeSize) {
         this.mapData = mapData;
         this.width = width;
