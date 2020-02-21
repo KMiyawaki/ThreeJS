@@ -28,6 +28,7 @@
             const divDebugText = document.getElementById("debugText");
 
             /* デバッグ用の出力 */
+            const AUTO_SCROLL_DEBUG = false; // divDebugText を常に最新の行までスクロールさせるかどうか。
             divDebugText.value = ("ViewPort: " + window.innerWidth + "," + window.innerHeight + "\n");
             /* ↓↓↓work11 の追記場所↓↓↓ */
 
@@ -76,7 +77,9 @@
                 orbitControls.update(deltaTime);
                 renderer.render(scene, camera);
                 requestAnimationFrame(renderFrame);
-                divDebugText.scrollTop = divDebugText.scrollHeight;
+                if (AUTO_SCROLL_DEBUG) {
+                    divDebugText.scrollTop = divDebugText.scrollHeight;
+                }
             }
             renderFrame();
 
