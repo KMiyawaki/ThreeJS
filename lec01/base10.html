@@ -30,9 +30,9 @@
             /* デバッグ用の出力 */
             const AUTO_SCROLL_DEBUG = false; // divDebugText を常に最新の行までスクロールさせるかどうか。
             divDebugText.value = ("ViewPort: " + window.innerWidth + "," + window.innerHeight + "\n");
-            /* ↓↓↓work11 の追記場所↓↓↓ */
+            /* ↓↓↓work11～work12 の追記場所↓↓↓ */
 
-            /* ↑↑↑work11 の追記場所↑↑↑ */
+            /* ↑↑↑work11～work12 の追記場所↑↑↑ */
 
             /* THREE.js の初期化 */
             const [scene, camera, renderer, clock, axes] = mylib2020.initThreeInElement(divGlView);
@@ -44,19 +44,25 @@
             plane.receiveShadow = true; /* 他の物体の影が落ちる */
             scene.add(plane);
 
-            /* 平面の生成 */
+            /* 球体の生成 */
+            const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 20, 20), new THREE.MeshPhongMaterial({ color: 0x0000FF, wireframe: false }));
+            sphere.position.set(3, 3, 3); /* 座標(3,3,3)に移動 */
+            sphere.castShadow = true; /* 他の物体に影を落とす */
+            scene.add(sphere);
+            /* ↓↓↓work13 の追記場所↓↓↓ */
+
+            /* ↑↑↑work13 の追記場所↑↑↑ */
+
+            /* 立方体の生成 */
             const cubeGeometry = new THREE.BoxGeometry(3, 3, 3); /* Geometry の生成を分けて書くこともできる */
             const cubeMaterial = new THREE.MeshPhongMaterial({ color: 0xFF0000 }); /* Material の生成を分けて書くこともできる */
             const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
             cube.castShadow = true; /* 他の物体に影を落とす */
             cube.receiveShadow = true; /* 他の物体から影が落ちる */
             scene.add(cube);
+            /* ↓↓↓work14 の追記場所↓↓↓ */
 
-            /* 球体の生成 */
-            const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 20, 20), new THREE.MeshPhongMaterial({ color: 0x0000FF, wireframe: false }));
-            sphere.position.set(3, 3, 3); /* 座標(3,3,3)に移動 */
-            sphere.castShadow = true; /* 他の物体に影を落とす */
-            scene.add(sphere);
+            /* ↑↑↑work14 の追記場所↑↑↑ */
 
             /* 平行光源の生成 */
             const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0); /* 色は白、強さは 1.0 */
