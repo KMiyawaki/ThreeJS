@@ -25,11 +25,11 @@
             /* 主要な HTML 要素の取得 */
             const divScreen = document.getElementById("screen");
             const divGlView = document.getElementById("glView");
-            const divDebugText = document.getElementById("debugText");
+            const taDebugText = document.getElementById("debugText");
 
             /* デバッグ用の出力 */
-            const AUTO_SCROLL_DEBUG = false; // divDebugText を常に最新の行までスクロールさせるかどうか。
-            divDebugText.value = ("ViewPort: " + window.innerWidth + "," + window.innerHeight + "\n");
+            const AUTO_SCROLL_DEBUG = false; // taDebugText を常に最新の行までスクロールさせるかどうか。
+            taDebugText.value = ("ViewPort: " + window.innerWidth + "," + window.innerHeight + "\n");
             /* ↓↓↓work11～work12 の追記場所↓↓↓ */
 
             /* ↑↑↑work11～work12 の追記場所↑↑↑ */
@@ -95,14 +95,14 @@
                 renderer.render(scene, camera);
                 requestAnimationFrame(renderFrame);
                 if (AUTO_SCROLL_DEBUG) {
-                    divDebugText.scrollTop = divDebugText.scrollHeight;
+                    taDebugText.scrollTop = taDebugText.scrollHeight;
                 }
             }
             renderFrame();
 
             /* 画面サイズ変更時の処理 */
             window.addEventListener('resize', function () {
-                divDebugText.value += ("ViewPort: " + window.innerWidth + "," + window.innerHeight + "\n");
+                taDebugText.value += ("ViewPort: " + window.innerWidth + "," + window.innerHeight + "\n");
                 const glViewSize = divGlView.getBoundingClientRect();
                 renderer.setSize(glViewSize.width, glViewSize.height);
                 camera.aspect = glViewSize.width / glViewSize.height;
