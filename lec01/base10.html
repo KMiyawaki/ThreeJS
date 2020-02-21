@@ -66,7 +66,7 @@
 
             /* 平行光源の生成 */
             /* ↓↓↓work16 の修正場所↓↓↓ */
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0); /* 色は白、強さは 1.0 */
+            const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1.0); /* 色は白、強さは 1.0 */
             directionalLight.castShadow = true; /* 他の物体に影を落とす */
             directionalLight.position.set(5, 5, 5);        /* 座標(5,5,5)から */
             directionalLight.target.position.set(0, 0, 0); /* 座標(0,0,0)に照射 */
