@@ -58,11 +58,11 @@
             /* ↑↑↑work13 の追記場所↑↑↑ */
 
             /* 立方体の生成 */
-            /* ↓↓↓work17 の修正場所↓↓↓ */
+            /* ↓↓↓work17 の追記・修正場所↓↓↓ */
             const cubeGeometry = new THREE.BoxGeometry(3, 3, 3); /* Geometry の生成を分けて書くこともできる */
             const cubeMaterial = new THREE.MeshPhongMaterial({ color: 0xFF0000 }); /* Material の生成を分けて書くこともできる */
             const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-            /* ↑↑↑work17 の追記場所↑↑↑ */
+            /* ↑↑↑work17 の追記・修正場所↑↑↑ */
             cube.castShadow = true; /* 他の物体に影を落とす */
             cube.receiveShadow = true; /* 他の物体から影が落ちる */
             scene.add(cube);
