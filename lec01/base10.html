@@ -63,9 +63,11 @@
             const cubeMaterial = new THREE.MeshPhongMaterial({ color: 0xFF0000 }); /* Material の生成を分けて書くこともできる */
             const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
             /* ↑↑↑work17 の追記・修正場所↑↑↑ */
+            /* ↓↓↓work18 の追記・修正場所↓↓↓ */
             cube.castShadow = true; /* 他の物体に影を落とす */
             cube.receiveShadow = true; /* 他の物体から影が落ちる */
             scene.add(cube);
+            /* ↑↑↑work18 の追記・修正場所↑↑↑ */
             /* ↓↓↓work14～work15 の追記場所↓↓↓ */
 
             /* ↑↑↑work14～work15 の追記場所↑↑↑ */
