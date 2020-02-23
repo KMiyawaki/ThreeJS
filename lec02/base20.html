@@ -56,7 +56,6 @@
             cube.receiveShadow = true; /* 他の物体から影が落ちる */
             cube.add(new THREE.AxesHelper(5));  /* 物体のローカル座標軸を表示する */
             scene.add(cube);
-            cube.add(new THREE.AxesHelper(5));
 
             /* 平行光源の生成 */
             const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1.0); /* 色は白、強さは 1.0 */
