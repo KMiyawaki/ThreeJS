@@ -40,15 +40,15 @@ class MyMaze{
     }
 
     calcPositionFromIndex(ix, iy) {
-        const x = -this.cubeSize * ix;
+        const x = this.cubeSize * ix;
         const y = this.cubeSize / 2;
-        const z = -this.cubeSize * iy;
+        const z = this.cubeSize * iy;
         return { x: x, y: y, z: z };
     }
 
     calcIndexFromPosition(x, y, z) {
-        const ix = Math.floor(-x / this.cubeSize);
-        const iy = Math.floor(-z / this.cubeSize);
+        const ix = Math.floor(x / this.cubeSize);
+        const iy = Math.floor(z / this.cubeSize);
         return { ix: ix, iy: iy };
     }
 
