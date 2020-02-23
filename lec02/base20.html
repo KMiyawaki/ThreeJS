@@ -45,6 +45,7 @@
             const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 20, 20), new THREE.MeshPhongMaterial({ color: 0x0000FF, wireframe: false }));
             sphere.position.set(3, 3, 3); /* 座標(3,3,3)に移動 */
             sphere.castShadow = true; /* 他の物体に影を落とす */
+            sphere.add(new THREE.AxesHelper(2)); /* 物体のローカル座標軸を表示する */
             scene.add(sphere);
 
             /* 立方体の生成 */
@@ -53,7 +54,9 @@
             const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
             cube.castShadow = true; /* 他の物体に影を落とす */
             cube.receiveShadow = true; /* 他の物体から影が落ちる */
+            cube.add(new THREE.AxesHelper(5));  /* 物体のローカル座標軸を表示する */
             scene.add(cube);
+            cube.add(new THREE.AxesHelper(5));
 
             /* 平行光源の生成 */
             const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1.0); /* 色は白、強さは 1.0 */
