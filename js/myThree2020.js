@@ -108,7 +108,7 @@ mylib2020.initPushButton = function (element, activeColor, onPressed = null, onR
     }
 
 }
-mylib2020.arrowButton = class {
+mylib2020.ArrowButton = class {
     constructor(container, activeImage, verbose = false) {
         this.container = container;
         this.normalImage = this.container.style.backgroundImage;
