@@ -36,7 +36,7 @@ class MyGameItem {
 }
 
 class MyGameCharacter {
-    constructor(name, hp, power, defense, speed, imageURL = null) {
+    constructor(name, imageURL = null, hp = 1, power = 1, defense = 1, speed = 1) {
         this.name = name;
         this.hp = hp;
         this.power = power;
