@@ -52,6 +52,9 @@ body {
   -o-user-select: none;
   width: 13%;
   height: 30%;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center center;
 }
 
 .pushButton {
