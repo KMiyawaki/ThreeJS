@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scene</title>
+    <script type="text/javascript" src="../js/three.min.js"></script>
+    <script type="text/javascript" src="../js/OrbitControls.js"></script>
+    <script type="text/javascript" src="../js/myThree2020.js"></script>
+    <script type="text/javascript" src="../js/myGameCharacter.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+</head>
+
+<body>
+    <div id="screen" class="screen">
+        <div id="glView" style="position: relative;height: 100%;">
+            <!--textarea id="debugText" rows="8" cols="20" class="debugText" style="display: none;">Debug output</textarea> デバッグ用表示を無くしたいときはこちらを有効にする。-->
+            <textarea id="debugText" rows="12" cols="30" class="debugText">Debug output</textarea>
+        </div>
+        <!-- ↓↓↓work31の追記場所↓↓↓ -->
+        <!-- ↑↑↑work31の追記場所↑↑↑ -->
+    </div>
+    <script type="text/javascript">
+        function init() {
+            /* 主要な HTML 要素の取得 */
+            const divScreen = document.getElementById("screen");
+            const divGlView = document.getElementById("glView");
+            const taDebugText = document.getElementById("debugText");
+
+            /* デバッグ用の出力 */
+            const AUTO_SCROLL_DEBUG = true; // taDebugText を常に最新の行までスクロールさせるかどうか。
+            taDebugText.value = ("ViewPort: " + window.innerWidth + "," + window.innerHeight + "\n");
+
+            /* THREE.js の初期化 */
+            const [scene, camera, renderer, clock, axes] = mylib2020.initThreeInElement(divGlView);
+
+            /* 平面の生成 */
+            const plane = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshPhongMaterial({ color: 0xCCFFCC }));
+            plane.rotateX(THREE.Math.degToRad(-90)); /* X 軸中心に90度回転 */
+            plane.receiveShadow = true; /* 他の物体の影が落ちる */
+            scene.add(plane);
+
+            /* 球体の生成 */
+            const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 20, 20), new THREE.MeshPhongMaterial({ color: 0x0000FF, wireframe: false }));
+            sphere.position.set(3, 3, 3); /* 座標(3,3,3)に移動 */
+            sphere.castShadow = true; /* 他の物体に影を落とす */
+            scene.add(sphere);
+
+            /* 立方体の生成 */
+            const cubeGeometry = new THREE.BoxGeometry(3, 3, 3); /* Geometry の生成を分けて書くこともできる */
+            const cubeMaterial = new THREE.MeshPhongMaterial({ color: 0xFF0000 }); /* Material の生成を分けて書くこともできる */
+            const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+            cube.castShadow = true; /* 他の物体に影を落とす */
+            cube.receiveShadow = true; /* 他の物体から影が落ちる */
+            scene.add(cube);
+
+            /* スポットライトの生成 */
+            const spotLight = new THREE.SpotLight(0xFFFFFF, 1); /* 色は白、強さは 1.0 */
+            spotLight.angle = THREE.Math.degToRad(45); /* 光源位置から画角90度の円錐状に光を発する */
+            spotLight.penumbra = 0.6; /* 半影をどの程度生じさせるか。 */
+            spotLight.castShadow = true; /* 他の物体に影を落とす */
+            scene.add(spotLight); /* ライト本体と */
+            scene.add(spotLight.target); /* 照射ターゲットもシーンに追加する必要がある */
+
+            /* カメラ等の位置調整 */
+            camera.position.set(15, 15, 15);
+            camera.lookAt(0, 0, 0);
+            cube.position.y = 1.5;
+            spotLight.position.set(0, 10, 0); /* 座標(0,10,0)から */
+            spotLight.target.position.set(0, 0, 0); /* 座標(0,0,0)に照射 */
+
+            /* アニメーションのための描画更新処理 */
+            function renderFrame() {
+                const deltaTime = clock.getDelta(); /* 前フレームからの経過時間。物体の移動に使う。 */
+                renderer.render(scene, camera);
+                requestAnimationFrame(renderFrame);
+                if (AUTO_SCROLL_DEBUG) {
+                    taDebugText.scrollTop = taDebugText.scrollHeight;
+                }
+            }
+            renderFrame();
+
+            /* 画面サイズ変更時の処理 */
+            window.addEventListener('resize', function () {
+                taDebugText.value += ("ViewPort: " + window.innerWidth + "," + window.innerHeight + "\n");
+                const glViewSize = divGlView.getBoundingClientRect();
+                renderer.setSize(glViewSize.width, glViewSize.height);
+                camera.aspect = glViewSize.width / glViewSize.height;
+                camera.updateProjectionMatrix();
+            });
+        }
+        window.addEventListener('load', init);
+    </script>
+</body>
