@@ -23,17 +23,21 @@ mylib2020.addOPhysRigidBody = function (threeObject, type, geometry, mass, frict
     return rigidBody;
 }
 
-mylib2020.addOPhysBox = function (threeObject, type, bbox, mass, friction, restitution, oimoPhysicsWorld, minLength = 0.01) {
+mylib2020.addOPhysBox = function (threeObject, type, mass, friction, restitution, oimoPhysicsWorld, minLength = 0.01) {
+    threeObject.geometry.computeBoundingBox();
+    const bbox = threeObject.geometry.boundingBox;
     const size = {
-        w: Math.max(minLength, Math.abs(bbox.max.x - bbox.min.x)),
-        h: Math.max(minLength, Math.abs(bbox.max.y - bbox.min.y)),
-        d: Math.max(minLength, Math.abs(bbox.max.z - bbox.min.z))
+        w: Math.max(minLength, Math.abs(bbox.max.x - bbox.min.x) * threeObject.scale.x),
+        h: Math.max(minLength, Math.abs(bbox.max.y - bbox.min.y) * threeObject.scale.y),
+        d: Math.max(minLength, Math.abs(bbox.max.z - bbox.min.z) * threeObject.scale.z)
     };
     const geometry = new OIMO.BoxGeometry(new OIMO.Vec3(size.w / 2, size.h / 2, size.d / 2));
     return mylib2020.addOPhysRigidBody(threeObject, type, geometry, mass, friction, restitution, oimoPhysicsWorld);
 }
 
-mylib2020.addOPhysSphere = function (threeObject, type, radius, mass, friction, restitution, oimoPhysicsWorld) {
+mylib2020.addOPhysSphere = function (threeObject, type, mass, friction, restitution, oimoPhysicsWorld) {
+    threeObject.geometry.computeBoundingSphere();
+    const radius = threeObject.geometry.boundingSphere.radius * threeObject.scale.x;
     const geometry = new OIMO.SphereGeometry(radius);
     return mylib2020.addOPhysRigidBody(threeObject, type, geometry, mass, friction, restitution, oimoPhysicsWorld);
 }
@@ -73,15 +77,13 @@ mylib2020.OimoPhysicsManager = class {
     }
 
     addBox(threeObject, type, mass = 1, friction = 0.5, restitution = 0.5, minLength = 0.01) {
-        threeObject.geometry.computeBoundingBox();
-        mylib2020.addOPhysBox(threeObject, type, threeObject.geometry.boundingBox, mass, friction, restitution, this.world, minLength);
+        mylib2020.addOPhysBox(threeObject, type, mass, friction, restitution, this.world, minLength);
         this.setRigidBodyState(threeObject);
         this.targetObjects.add(threeObject);
     }
 
     addSphere(threeObject, type, mass = 1, friction = 0.5, restitution = 0.5) {
-        threeObject.geometry.computeBoundingSphere();
-        mylib2020.addOPhysSphere(threeObject, type, threeObject.geometry.boundingSphere.radius, mass, friction, restitution, this.world);
+        mylib2020.addOPhysSphere(threeObject, type, mass, friction, restitution, this.world);
         this.setRigidBodyState(threeObject);
         this.targetObjects.add(threeObject);
     }

@@ -48,7 +48,7 @@
             plane.receiveShadow = true; /* 他の物体の影が落ちる */
             scene.add(plane);
             /* 平面に物理計算を適用する */
-            oimoPhysics.addPlane(plane, OIMO.RigidBodyType.STATIC); // OIMO.RigidBodyType.STATIC は動かない物体を示す。
+            oimoPhysics.addPlane(plane, OIMO.RigidBodyType.STATIC, 0); // OIMO.RigidBodyType.STATIC は動かない物体を示す。
 
             /* 球体の生成 */
             const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 20, 20), new THREE.MeshPhongMaterial({ color: 0x0000FF, wireframe: false }));
@@ -62,12 +62,13 @@
             const cubeGeometry = new THREE.BoxGeometry(3, 1, 3); /* Geometry の生成を分けて書くこともできる */
             const cubeMaterial = new THREE.MeshPhongMaterial({ color: 0xFF0000 }); /* Material の生成を分けて書くこともできる */
             const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-            cube.position.set(1.8, 1, 0);
+            //cube.scale.set(8, 1, 3);
+            cube.position.set(1.5, 1, 0);
             cube.castShadow = true; /* 他の物体に影を落とす */
             cube.receiveShadow = true; /* 他の物体から影が落ちる */
             scene.add(cube);
             /* 直方体に物理計算を適用する */
-            oimoPhysics.addBox(cube, OIMO.RigidBodyType.DYNAMIC, 20); // OIMO.RigidBodyType.DYNAMIC は動く物体を示す。第 3 引数は重さで 20kg
+            oimoPhysics.addBox(cube, OIMO.RigidBodyType.DYNAMIC, 10); // OIMO.RigidBodyType.DYNAMIC は動く物体を示す。第 3 引数は重さで 20kg
 
             /* 平行光源の生成 */
             const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1.0); /* 色は白、強さは 1.0 */
