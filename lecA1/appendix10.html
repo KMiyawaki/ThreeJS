@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scene</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/build/three.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/controls/OrbitControls.js"></script>
+    <!-- GLTF モデルロードに必要 -->
+    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/loaders/GLTFLoader.js"></script>
+    <!-- 物理エンジン Ammo -->
+    <script type="text/javascript" src="http://kripken.github.io/ammo.js/builds/ammo.js"></script>
+    <!-- アニメーションライブラリ TweenMax -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/greensock@1.20.2/dist/TweenMax.min.js"></script>
+    <script type="text/javascript" src="../js/myThree2020.js"></script>
+    <script type="text/javascript" src="../js/myAmmo2020.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+</head>
+
+<body>
+    <div id="screen" class="screen">
+        <div id="glView" style="position: relative;height: 75%;">
+            <!--textarea id="debugText" rows="8" cols="20" class="debugText" style="display: none;">Debug output</textarea> デバッグ用表示を無くしたいときはこちらを有効にする。-->
+            <textarea id="debugText" rows="8" cols="20" class="debugText">Debug output</textarea>
+            <button id="startButton" class="startButton" onclick="javascript:init()">
+                Click to Play
+            </button>
+        </div>
+        <div id="controller" style="position: relative;height: 25%;background-color:chocolate">
+            <div id="up" class="arrowButton"
+                style="top: 5%; left: 16%; background-image:url(../assets/gray_arrow.png);">
+            </div>
+            <div id="down" class="arrowButton"
+                style="top: 65%; left: 16%; background-image:url(../assets/gray_arrow.png); transform: rotate(180deg)">
+            </div>
+            <div id="left" class="arrowButton"
+                style="top: 35%; left: 3%; background-image:url(../assets/gray_arrow.png); transform: rotate(-90deg)">
+            </div>
+            <div id="right" class="arrowButton"
+                style="top: 35%; left: 29%; background-image:url(../assets/gray_arrow.png); transform: rotate(90deg)">
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function init() {
+            /* 主要な HTML 要素の取得 */
+            const divScreen = document.getElementById("screen");
+            const divGlView = document.getElementById("glView");
+            const taDebugText = document.getElementById("debugText");
+            divGlView.removeChild(document.getElementById('startButton'));
+            /* デバッグ用の出力 */
+            const AUTO_SCROLL_DEBUG = true; // taDebugText を常に最新の行までスクロールさせるかどうか。
+            taDebugText.value = ("ViewPort: " + window.innerWidth + "," + window.innerHeight + "\n");
+
+            /* Three.js の初期化 */
+            const [scene, camera, renderer, clock, axes] = mylib2020.initThreeInElement(divGlView);
+            camera.position.set(15, 15, 15);
+
+            /* ammo.js の初期化 */
+            Ammo();
+            const ammo = new mylib2020.AmmoManager(scene);
+
+            /* サウンド関連 */
+            const audioListener = new THREE.AudioListener();
+            camera.add(audioListener);
+            const sound = new THREE.Audio(audioListener);
+            new THREE.AudioLoader().load('../assets/sounds/bounce.wav', function (buffer) {
+                sound.setBuffer(buffer);
+                sound.setLoop(false);
+                sound.setVolume(1.5);
+            });
+
+            /* GLTF モデルデータをロードする。 THREE.GLTFLoader は Three.js 本体には含まれていないことに注意 */
+            let rocket = null;
+            const modelUrl = "../assets/models/rocket.gltf";
+            new THREE.GLTFLoader().load(modelUrl, // この関数は非同期的に実行される。
+                function (gltf) { // モデルロードに成功
+                    rocket = gltf.scene;
+                    rocket.name = "Rocket";
+                    rocket.position.set(0, 1, 0);
+                    /* ロケットを囲むように衝突検出範囲を設定する。
+                     addBoundingSphereShape など、他の衝突判定形状も試してみよう。
+                     scale や offset 、addBoundingCylinderShape の場合は axis も変更してみよう。*/
+                    ammo.collisionBuilder.addBoundingBoxShape(rocket, { showCollision: true, scale: new THREE.Vector3(1, 0.7, 1) });
+                    // ammo.collisionBuilder.addBoundingSphereShape(rocket, { showCollision: true, scale: new THREE.Vector3(0.6, 1, 1) });
+                    // ammo.collisionBuilder.addBoundingCylinderShape(rocket, { showCollision: true, axis: "z", scale: new THREE.Vector3(0.4, 0.4, 1), offset: new THREE.Vector3(0, -0.5, 0) });
+                    /* ロケットに物理的属性を追加する
+                     movable: ユーザプログラム側で移動させる可能性がある場合、true にする。
+                     mass: 重さ（0 にすると、他の物体が衝突しても動かない）
+                     friction: 摩擦
+                     restitution: 反発 
+                     freezeRotationX/Y/Z: 指定した軸中心の回転をさせないようにする。
+                     angularDamping: 回転速度の減衰。デフォルトは 0（摩擦の影響だけで回転速度が減速する）。
+                     */
+                    ammo.collisionBuilder.addRigidBody(rocket, { movable: true, mass: 100, friction: 0.9, restitution: 0.1, freezeRotationX: true, freezeRotationZ: true, angularDamping: 0.8 });
+                    /* ロケットを物理計算対象としてシーンに追加する */
+                    ammo.registerObject(rocket);
+                    rocket.add(new THREE.AxesHelper(2)); // ローカル座標軸を表示。
+                    taDebugText.value += "Load:" + modelUrl + "\n";
+                }, null, function (error) {
+                    taDebugText.value += "Failed to load:" + modelUrl + "\n";
+                }
+            );
+            /* 平面の生成 */
+            const mapTexture = new THREE.TextureLoader().load("../assets/downloads/DesolatedHut.png");
+            mapTexture.wrapS = THREE.RepeatWrapping;
+            mapTexture.wrapT = THREE.RepeatWrapping;
+            mapTexture.repeat.set(10, 10);
+            const bumpTexture = new THREE.TextureLoader().load("../assets/downloads/RockWall_orFloor_height.png"); /* バンプマップ用テクスチャ */
+            bumpTexture.wrapS = THREE.RepeatWrapping;
+            bumpTexture.wrapT = THREE.RepeatWrapping;
+            bumpTexture.repeat.set(10, 10);
+            const plane = new THREE.Mesh(new THREE.PlaneGeometry(30, 30),
+                new THREE.MeshPhongMaterial({ map: mapTexture, bumpMap: bumpTexture, bumpScale: 0.5 }));
+            plane.name = "Plane"; // 衝突時に分かりやすくするため物体に名前を付ける。
+            plane.rotation.x = THREE.Math.degToRad(-90);
+            plane.receiveShadow = true; /* 他の物体から影が落ちる */
+            plane.userData.originalColor = plane.material.color.clone();
+            /* 平面に衝突検出範囲を設定する。 */
+            ammo.collisionBuilder.addPlaneShape(plane);
+            /* 平面に物理的属性を追加する 
+            　mass: 重さ（0 にすると、他の物体が衝突しても動かない）
+            　friction: 摩擦
+            　restitution: 反発 */
+            ammo.collisionBuilder.addRigidBody(plane, { mass: 0, friction: 1, restitution: 0.9 });
+            /* 平面を物理計算対象としてシーンに追加する */
+            ammo.registerObject(plane);
+
+            /* 直方体の生成 */
+            const boxGeometry = new THREE.BoxGeometry(1, 1, 1); /* Geometry の生成を分けて書くこともできる */
+            const boxColor = 0x00FF00;
+            const box = [
+                new THREE.Mesh(boxGeometry, new THREE.MeshPhongMaterial({ color: boxColor })),
+                new THREE.Mesh(boxGeometry, new THREE.MeshPhongMaterial({ color: boxColor })),
+                new THREE.Mesh(boxGeometry, new THREE.MeshPhongMaterial({ color: boxColor }))
+            ];
+            box[0].scale.set(4, 1, 1);
+            box[0].position.set(0, 0.5, 5);
+            box[1].scale.set(2, 2, 0.2);
+            box[1].position.set(1, 1, -5);
+            box[2].scale.set(2, 2, 0.2);
+            box[2].position.set(-1, 1, -5);
+            for (let i = 0; i < box.length; i++) {
+                box[i].name = "Box" + i; // 衝突時に分かりやすくするため物体に名前を付ける。
+                box[i].castShadow = true; /* 他の物体に影を落とす */
+                box[i].receiveShadow = true; /* 他の物体から影が落ちる */
+                box[i].userData.originalColor = box[i].material.color.clone();
+                /* 直方体に衝突検出範囲を設定する。 */
+                ammo.collisionBuilder.addBoxShape(box[i]);
+                /* 平面に物理的属性を追加する 
+                 mass: 重さ（0 にすると、他の物体が衝突しても動かない）
+                 movable: ユーザプログラム側で移動させる可能性がある場合、true にする。 */
+                ammo.collisionBuilder.addRigidBody(box[i], { mass: 0, movable: true });
+                /* 直方体を物理計算対象としてシーンに追加する */
+                ammo.registerObject(box[i]);
+            }
+            /* TweenMax によるアニメーション設定
+             repeat: 繰り返し回数指定。-1 で無限ループ。
+             yoyo: true にすると、現在値->指定した値->現在値... のように値を往復させられる。 */
+            TweenMax.to(box[0].rotation, 2, { y: THREE.Math.degToRad(90), repeat: -1, yoyo: true }); // rotation.y の値を 0<->90 の範囲で往復させる。 
+            TweenMax.to(box[1].position, 1, { x: 2, repeat: -1, yoyo: true }); // position.x の値を 0<->2 の範囲で往復させる。
+            TweenMax.to(box[2].position, 1, { x: -2, repeat: -1, yoyo: true });  // position.x の値を 0<->-2 の範囲で往復させる。
+
+            /* 回転板の作成（親子関係のある物体） */
+            const board = new THREE.Mesh(boxGeometry, new THREE.MeshPhongMaterial({ color: boxColor }));
+            board.name = "Board";
+            board.scale.set(5, 0.2, 2);
+            board.position.set(2.5, 0.1, 0);
+            board.castShadow = true; /* 他の物体に影を落とす */
+            board.receiveShadow = true; /* 他の物体から影が落ちる */
+            board.userData.originalColor = board.material.color.clone();
+            /* 直方体に衝突検出範囲を設定する。物理的属性は親子関係構築後に親物体に対して付与する。 */
+            ammo.collisionBuilder.addBoxShape(board);
+            const shaft = new THREE.Object3D();
+            shaft.name = "RotBoard";
+            shaft.add(board);
+            shaft.rotateZ(THREE.Math.degToRad(5));
+            shaft.position.set(-2, 0, 0);
+            /* 子供の持つ衝突範囲を含めて親に衝突検出範囲を設定する。 */
+            ammo.collisionBuilder.addCompoundShape(shaft);
+            /* 回転板に物理的属性を追加する 
+             mass: 重さ（0 にすると、他の物体が衝突しても動かない）
+             movable: ユーザプログラム側で移動させる可能性がある場合、true にする。 */
+            ammo.collisionBuilder.addRigidBody(shaft, { mass: 0, movable: true });
+            /* 回転板を物理計算対象としてシーンに追加する */
+            ammo.registerObject(shaft);
+            /* TweenMax によるアニメーション設定
+             repeat: 繰り返し回数指定。-1 で無限ループ。
+             yoyo: true にすると、現在値->指定した値->現在値... のように値を往復させられる。 */
+            TweenMax.to(shaft.rotation, 3, { z: THREE.Math.degToRad(180), repeat: -1, yoyo: true }); // rotation.z の値を 5<->180 の範囲で往復させる。
+
+            /* 球体の生成 */
+            const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.4, 20, 20),
+                new THREE.MeshPhongMaterial({ color: 0x7777ff }));
+            sphere.name = "Sphere"; // 衝突時に分かりやすくするため物体に名前を付ける。
+            sphere.position.set(0, 5, 0.5);
+            sphere.scale.set(1, 2, 1);
+            sphere.castShadow = true;
+            sphere.receiveShadow = true;
+            sphere.add(new THREE.AxesHelper(1));  // ローカル座標軸を表示。
+            sphere.userData.originalColor = sphere.material.color.clone();
+            /* 球体に衝突検出範囲を設定する。 */
+            ammo.collisionBuilder.addSphereShape(sphere);
+            /* 球体に物理的属性を追加する
+             mass: 重さ（0 にすると、他の物体が衝突しても動かない）
+             friction: 摩擦
+             restitution: 反発 */
+            ammo.collisionBuilder.addRigidBody(sphere, { mass: 10, friction: 0.9, restitution: 0.9 });
+            /* 球体を物理計算対象としてシーンに追加する */
+            ammo.registerObject(sphere);
+
+            /* 円柱の生成 */
+            const cylinder = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.25, 1, 20, 32),
+                new THREE.MeshPhongMaterial({ color: 0xFFFF00, transparent: true }));
+            cylinder.name = "Cylinder"; // 衝突時に分かりやすくするため物体に名前を付ける。
+            cylinder.scale.set(2, 1, 2);
+            cylinder.position.set(-3, 10, 3.5);
+            cylinder.userData.originalColor = cylinder.material.color.clone();
+            /* 円柱に衝突検出範囲を設定する。 */
+            ammo.collisionBuilder.addCylinderShape(cylinder);
+            /* 円柱に物理的属性を追加する */
+            ammo.collisionBuilder.addRigidBody(cylinder);
+            /* 円柱を物理計算対象としてシーンに追加する */
+            ammo.registerObject(cylinder);
+            /* TweenMax によるアニメーション設定
+             repeat: 繰り返し回数指定。-1 で無限ループ。
+             yoyo: true にすると、現在値->指定した値->現在値... のように値を往復させられる。 */
+            TweenMax.to(cylinder.material, 3, { opacity: 0, repeat: -1, yoyo: true }); // material.opacity の値を 0<->1 の範囲で往復させる。
+
+            /* 円錐の生成 */
+            const cone = new THREE.Mesh(new THREE.ConeGeometry(0.4, 0.8, 20, 32),
+                new THREE.MeshPhongMaterial({ color: 0xFF00FF }));
+            cone.name = "Cone"; // 衝突時に分かりやすくするため物体に名前を付ける。
+            cone.scale.set(2, 6, 2);
+            cone.position.set(0, 10, 0.5);
+            cone.rotateX(THREE.Math.degToRad(190));
+            cone.rotateZ(THREE.Math.degToRad(30));
+            cone.castShadow = true;
+            cone.receiveShadow = true;
+            cone.userData.originalColor = cone.material.color.clone();
+            /* 円錐に衝突検出範囲を設定する。 */
+            ammo.collisionBuilder.addConeShape(cone);
+            /* 円錐に物理的属性を追加する */
+            ammo.collisionBuilder.addRigidBody(cone);
+            /* 円錐を物理計算対象としてシーンに追加する */
+            ammo.registerObject(cone);
+
+            /* スポットライト生成 */
+            const spotLight = new THREE.SpotLight(0xffffff);
+            spotLight.position.set(0, 30, 0);
+            spotLight.castShadow = true;
+            scene.add(spotLight);
+
+            /* マウスコントローラの追加。 THREE.OrbitControls は Three.js 本体には含まれていないことに注意 */
+            const orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+            orbitControls.update();
+
+            elems = document.getElementsByClassName("arrowButton"); // class 属性に arrowButton が指定された HTML 要素を全て取得し、配列に格納する。
+            const arrows = {}; // div の id と十字キーボタンクラスをペアとする辞書
+            for (let e of elems) {
+                arrows[e.id] = new mylib2020.ArrowButton(e, "url(../assets/red_arrow.png)");
+                /* 十字キーボタンを生成する。第一引数はボタン領域となる HTML の div 要素、第二引数は押したときの画像 */
+            }
+            const LINEAR = 3.0; // 直進速度 3.0m/sec
+            const ANGULAR = THREE.Math.degToRad(60); // 回転速度 60deg/sec
+            function renderFrame() {
+                const deltaTime = clock.getDelta();
+                orbitControls.update(deltaTime);
+                ammo.update(deltaTime);
+                if (ammo.has(rocket)) { // rocket が物理エンジンの管理下にあるかどうか。
+                    // movable を true に設定したものは userData.linearVelocity 、 userData.angularVelocity に速度を設定すると移動させられるように myAmmo2020.js で実装してある。
+                    rocket.userData.linearVelocity = 0;
+                    rocket.userData.angularVelocity = 0;
+                    if (arrows["up"].isPressed()) {
+                        rocket.userData.linearVelocity = LINEAR;
+                    }
+                    if (arrows["down"].isPressed()) {
+                        rocket.userData.linearVelocity = -LINEAR;
+                    }
+                    if (arrows["left"].isPressed()) {
+                        rocket.userData.angularVelocity = ANGULAR;
+                    }
+                    if (arrows["right"].isPressed()) {
+                        rocket.userData.angularVelocity = -ANGULAR;
+                    }
+                    /* rocket に対する衝突をチェックする */
+                    /* 現在接触している全物体のリスト */
+                    for (let object of rocket.userData.collision.getAll()) {
+                        if (object != plane && object.material) {
+                            object.material.color.setHex(0XFF0000); // 接触していたら、赤色にする。
+                        } else if (object == shaft) {// 回転板の場合、shaft そのものは空っぽなので、その子供（ board ）の色を変えたい。
+                            // children は子供物体の配列である。
+                            shaft.children[0].material.color.setHex(0XFF0000); // 接触していたら、赤色にする。
+                        }
+                    }
+                    /* このフレームで衝突を開始した物体のリスト */
+                    for (let object of rocket.userData.collision.getEnter()) {
+                        taDebugText.value += object.name + "と衝突\n";
+                        /* 衝突音をならす */
+                        if (sound.isPlaying) { // 再生中の場合は停止が必要。
+                            sound.stop();
+                        }
+                        sound.play();
+                    }
+                    /* このフレームで衝突が終了し、離れていった物体のリスト */
+                    for (let object of rocket.userData.collision.getExit()) {
+                        taDebugText.value += object.name + "と離れた\n";
+                        if (object.userData.originalColor) {
+                            object.material.color = object.userData.originalColor.clone();
+                        } else if (object == shaft) {
+                            shaft.children[0].material.color = shaft.children[0].userData.originalColor.clone();
+                        }
+                    }
+                    /* 前フレームから継続して接触中の物体のリスト */
+                    for (let object of rocket.userData.collision.getStay()) {
+                        // このプログラムでは、特に利用しない。
+                    }
+                }
+
+                for (let object of ammo.targetObjects) {
+                    if (object.position.y < -1) { // 床の 1m 下より落ちた物体は物理エンジンとシーンから削除する。
+                        ammo.remove(object);
+                    }
+                }
+
+                renderer.render(scene, camera);
+                requestAnimationFrame(renderFrame);
+                if (AUTO_SCROLL_DEBUG) {
+                    taDebugText.scrollTop = taDebugText.scrollHeight;
+                }
+            }
+            renderFrame();
+
+            /* 画面サイズ変更時の処理 */
+            window.addEventListener('resize', function () {
+                taDebugText.value += ("ViewPort: " + window.innerWidth + "," + window.innerHeight + "\n");
+                const glViewSize = divGlView.getBoundingClientRect();
+                renderer.setSize(glViewSize.width, glViewSize.height);
+                camera.aspect = glViewSize.width / glViewSize.height;
+                camera.updateProjectionMatrix();
+            });
+        }
+    </script>
+</body>
+
+</html>
