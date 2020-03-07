@@ -7,3 +7,9 @@
 ## [lec03](./lec03/base30.html)
 
 ## [appendix 1](./lecA1/appendix10.html)
+
+---
+
+## 演習用関数・クラス群のリファレンス
+
+[リンク](https://kmiyawaki.github.io/ThreeJS/docs/index.html)

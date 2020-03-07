@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: myThree2020.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: myThree2020.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * @fileOverview Three.js で簡単なブラウザアプリを作るユーティリティ。
  * @author K.Miyawaki
  */
@@ -42,24 +70,24 @@ mylib2020.calcScreenSize = function (aspect, viewPortWidth, viewPortHeight) {
  * @param {number} width シーンの横画素数。
  * @param {number} height シーンの縦画素数。
  * @param {Object} opts 生成のオプション。次のようなキーでパラメータ指定する。null のとき、デフォルト値が使用される。
- * <ul>
- *   <li>fov - number 画角。(デフォルト: 45.0)</li>
- *   <li>near - number カメラのどのくらい近くから描画範囲に含めるか。(デフォルト: 0.1)</li>
- *   <li>far - number カメラのどのくらい遠くまで描画範囲に含めるか。(デフォルト: 1000)</li>
- *   <li>axesLength - number シーンに表示するワールド座標軸の長さ。(デフォルト: 20)</li>
- *   <li>clearColor - number シーンの何もない領域を塗りつぶす色。(デフォルト: 0x222222)</li>
- *   <li>camPosX - number カメラの初期位置。(デフォルト: 0)</li>
- *   <li>camPosY - number カメラの初期位置。(デフォルト: 2)</li>
- *   <li>camPosZ - number カメラの初期位置。(デフォルト: -7)</li>
- * </ul>
+ * &lt;ul>
+ *   &lt;li>fov - number 画角。(デフォルト: 45.0)&lt;/li>
+ *   &lt;li>near - number カメラのどのくらい近くから描画範囲に含めるか。(デフォルト: 0.1)&lt;/li>
+ *   &lt;li>far - number カメラのどのくらい遠くまで描画範囲に含めるか。(デフォルト: 1000)&lt;/li>
+ *   &lt;li>axesLength - number シーンに表示するワールド座標軸の長さ。(デフォルト: 20)&lt;/li>
+ *   &lt;li>clearColor - number シーンの何もない領域を塗りつぶす色。(デフォルト: 0x222222)&lt;/li>
+ *   &lt;li>camPosX - number カメラの初期位置。(デフォルト: 0)&lt;/li>
+ *   &lt;li>camPosY - number カメラの初期位置。(デフォルト: 2)&lt;/li>
+ *   &lt;li>camPosZ - number カメラの初期位置。(デフォルト: -7)&lt;/li>
+ * &lt;/ul>
  * @returns {Array} 次の要素が入った配列。
- * <ul>
- *   <li>THREE.Scene</li>
- *   <li>THREE.PerspectiveCamera</li>
- *   <li>THREE.WebGLRenderer</li>
- *   <li>THREE.Clock</li>
- *   <li>THREE.AxesHelper (opts.axesLength が 0 以下の場合は生成されず、 null が帰る)</li>
- * </ul>
+ * &lt;ul>
+ *   &lt;li>THREE.Scene&lt;/li>
+ *   &lt;li>THREE.PerspectiveCamera&lt;/li>
+ *   &lt;li>THREE.WebGLRenderer&lt;/li>
+ *   &lt;li>THREE.Clock&lt;/li>
+ *   &lt;li>THREE.AxesHelper (opts.axesLength が 0 以下の場合は生成されず、 null が帰る)&lt;/li>
+ * &lt;/ul>
  */
 mylib2020.initThree = function (width, height, opts) {
     opts = opts || {};
@@ -96,24 +124,24 @@ mylib2020.initThree = function (width, height, opts) {
  * Three.js を初期化し、シーンを生成する。
  * @param {HTMLElement} element シーンの親となる HTML 要素。
  * @param {Object} opts 生成のオプション。次のようなキーでパラメータ指定する。null のとき、デフォルト値が使用される。
- * <ul>
- *   <li>fov - number 画角。(デフォルト: 45.0)</li>
- *   <li>near - number カメラのどのくらい近くから描画範囲に含めるか。(デフォルト: 0.1)</li>
- *   <li>far - number カメラのどのくらい遠くまで描画範囲に含めるか。(デフォルト: 1000)</li>
- *   <li>axesLength - number シーンに表示するワールド座標軸の長さ。(デフォルト: 20)</li>
- *   <li>clearColor - number シーンの何もない領域を塗りつぶす色。(デフォルト: 0x222222)</li>
- *   <li>camPosX - number カメラの初期位置。(デフォルト: 0)</li>
- *   <li>camPosY - number カメラの初期位置。(デフォルト: 2)</li>
- *   <li>camPosZ - number カメラの初期位置。(デフォルト: -7)</li>
- * </ul>
+ * &lt;ul>
+ *   &lt;li>fov - number 画角。(デフォルト: 45.0)&lt;/li>
+ *   &lt;li>near - number カメラのどのくらい近くから描画範囲に含めるか。(デフォルト: 0.1)&lt;/li>
+ *   &lt;li>far - number カメラのどのくらい遠くまで描画範囲に含めるか。(デフォルト: 1000)&lt;/li>
+ *   &lt;li>axesLength - number シーンに表示するワールド座標軸の長さ。(デフォルト: 20)&lt;/li>
+ *   &lt;li>clearColor - number シーンの何もない領域を塗りつぶす色。(デフォルト: 0x222222)&lt;/li>
+ *   &lt;li>camPosX - number カメラの初期位置。(デフォルト: 0)&lt;/li>
+ *   &lt;li>camPosY - number カメラの初期位置。(デフォルト: 2)&lt;/li>
+ *   &lt;li>camPosZ - number カメラの初期位置。(デフォルト: -7)&lt;/li>
+ * &lt;/ul>
  * @returns {Array} 次の要素が入った配列。
- * <ul>
- *   <li>THREE.Scene</li>
- *   <li>THREE.PerspectiveCamera</li>
- *   <li>THREE.WebGLRenderer</li>
- *   <li>THREE.Clock</li>
- *   <li>THREE.AxesHelper (opts.axesLength が 0 以下の場合は生成されず、 null が帰る)</li>
- * </ul>
+ * &lt;ul>
+ *   &lt;li>THREE.Scene&lt;/li>
+ *   &lt;li>THREE.PerspectiveCamera&lt;/li>
+ *   &lt;li>THREE.WebGLRenderer&lt;/li>
+ *   &lt;li>THREE.Clock&lt;/li>
+ *   &lt;li>THREE.AxesHelper (opts.axesLength が 0 以下の場合は生成されず、 null が帰る)&lt;/li>
+ * &lt;/ul>
  */
 mylib2020.initThreeInElement = function (element, opts) {
     const rect = element.getBoundingClientRect();
@@ -124,10 +152,10 @@ mylib2020.initThreeInElement = function (element, opts) {
 
 
 /**
- * fromObject の中心から指定した方向にレイを飛ばし、 targetMeshes に含まれる物体と交叉するかどうかを判定する。<br/>
+ * fromObject の中心から指定した方向にレイを飛ばし、 targetMeshes に含まれる物体と交叉するかどうかを判定する。&lt;br/>
  * 物理エンジンを用いない簡易な衝突判定法。
  * @param {THREE.Object3D} fromObject レイの中心となる物体。
- * @param {Array<THREE.Object3D>} targetMeshes レイの交叉判定対象となる物体群が入った配列。
+ * @param {Array&lt;THREE.Object3D>} targetMeshes レイの交叉判定対象となる物体群が入った配列。
  * @param {THREE.Vector3} direction レイの方向。
  * @param {number} [distance=1.5] レイとの交差地点と fromObject の距離がこの値未満なら衝突しているとみなす。
  * @returns {boolean} 衝突している物体があるか否か。 true: 何かと衝突している。
@@ -138,7 +166,7 @@ mylib2020.checkCollision = function (fromObject, targetMeshes, direction, distan
     const ray = new THREE.Raycaster(fromObject.position, v);
     const objs = ray.intersectObjects(targetMeshes);
     if (objs.length > 0) {
-        if (objs[0].distance < distance) {
+        if (objs[0].distance &lt; distance) {
             return true;
         }
     }
@@ -248,10 +276,10 @@ mylib2020.ArrowButton = class {
     }
 
     contains(clientX, clientY, clientRect) {
-        if (clientX < clientRect.x || clientRect.x + clientRect.width < clientX) {
+        if (clientX &lt; clientRect.x || clientRect.x + clientRect.width &lt; clientX) {
             return false;
         }
-        if (clientY < clientRect.y || clientRect.y + clientRect.height < clientY) {
+        if (clientY &lt; clientRect.y || clientRect.y + clientRect.height &lt; clientY) {
             return false;
         }
         return true;
@@ -312,3 +340,26 @@ mylib2020.ArrowButton = class {
         this.release();
     }
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="mylib2020.html">mylib2020</a></li></ul><h3>Classes</h3><ul><li><a href="MyGameCharacter.html">MyGameCharacter</a></li><li><a href="MyGameItem.html">MyGameItem</a></li><li><a href="mylib2020.AmmoCollisionBuilder.html">AmmoCollisionBuilder</a></li><li><a href="mylib2020.AmmoCollisionManager.html">AmmoCollisionManager</a></li><li><a href="mylib2020.AmmoManager.html">AmmoManager</a></li><li><a href="mylib2020.AmmoRigidBodyPose.html">AmmoRigidBodyPose</a></li><li><a href="mylib2020.ArrowButton.html">ArrowButton</a></li><li><a href="MyMaze.html">MyMaze</a></li></ul><h3>Global</h3><ul><li><a href="global.html#MyMazeTestData">MyMazeTestData</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Wed Mar 11 2020 11:07:08 GMT+0900 (GMT+09:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

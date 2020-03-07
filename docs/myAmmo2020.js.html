@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: myAmmo2020.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: myAmmo2020.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * @fileOverview Ammo のラッパー。
  * @author K.Miyawaki
  */
@@ -10,13 +38,13 @@ var mylib2020 = mylib2020 || {};
  *
  * @param {THREE.Vector3} gravity 重力の方向。
  * @returns {Array} 以下のオブジェクトが順番に入った配列。
- * <ul>
- *  <li>Ammo.btDiscreteDynamicsWorld</li>
- *  <li>Ammo.btCollisionDispatcher</li>
- *  <li>Ammo.btDbvtBroadphase</li>
- *  <li>Ammo.btSequentialImpulseConstraintSolver</li>
- *  <li>Ammo.btDefaultCollisionConfiguration</li>
- * </ul>
+ * &lt;ul>
+ *  &lt;li>Ammo.btDiscreteDynamicsWorld&lt;/li>
+ *  &lt;li>Ammo.btCollisionDispatcher&lt;/li>
+ *  &lt;li>Ammo.btDbvtBroadphase&lt;/li>
+ *  &lt;li>Ammo.btSequentialImpulseConstraintSolver&lt;/li>
+ *  &lt;li>Ammo.btDefaultCollisionConfiguration&lt;/li>
+ * &lt;/ul>
  */
 mylib2020.initAmmo = function (gravity) {
     const collisionConfiguration = new Ammo.btDefaultCollisionConfiguration();
@@ -52,9 +80,9 @@ mylib2020.AmmoCollisionBuilder = class {
         this.collisionShapeMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
     }
     /**
-     * 頂点を包む凸包の衝突検出範囲を生成し threeObject.userData.collisionShape に代入する。<br/>
+     * 頂点を包む凸包の衝突検出範囲を生成し threeObject.userData.collisionShape に代入する。&lt;br/>
      * @param {THREE.Mesh} threeObject Three.js の物体。
-     * @param {Array<THREE.Vector3>} vertices 物体の頂点配列。
+     * @param {Array&lt;THREE.Vector3>} vertices 物体の頂点配列。
      * @param {THREE.Vector3} scale 検出範囲の拡大縮小率。
      * @returns {Ammo.btConvexHullShape}
      */
@@ -71,7 +99,7 @@ mylib2020.AmmoCollisionBuilder = class {
     }
 
     /**
-     * threeObject と同じ大きさの平面の衝突検出範囲を生成し threeObject.userData.collisionShape に代入する。<br/>
+     * threeObject と同じ大きさの平面の衝突検出範囲を生成し threeObject.userData.collisionShape に代入する。&lt;br/>
      * @param {THREE.Mesh} threeObject Three.js の物体。THREE.PlaneGeometry を持つ必要がある。
      * @returns {Ammo.btConvexHullShape}
      */
@@ -89,7 +117,7 @@ mylib2020.AmmoCollisionBuilder = class {
     }
 
     /**
-     * threeObject と同じ大きさの直方体の衝突検出範囲を生成し threeObject.userData.collisionShape に代入する。<br/>
+     * threeObject と同じ大きさの直方体の衝突検出範囲を生成し threeObject.userData.collisionShape に代入する。&lt;br/>
      * @param {THREE.Mesh} threeObject Three.js の物体。THREE.BoxGeometry を持つ必要がある。
      * @returns {Ammo.btBoxShape}
      */
@@ -108,7 +136,7 @@ mylib2020.AmmoCollisionBuilder = class {
     }
 
     /**
-     * threeObject と同じ大きさの球体の衝突検出範囲を生成し threeObject.userData.collisionShape に代入する。<br/>
+     * threeObject と同じ大きさの球体の衝突検出範囲を生成し threeObject.userData.collisionShape に代入する。&lt;br/>
      * @param {THREE.Mesh} threeObject Three.js の物体。THREE.SphereGeometry を持つ必要がある。
      * @returns {Ammo.btMultiSphereShape}
      */
@@ -124,8 +152,8 @@ mylib2020.AmmoCollisionBuilder = class {
     }
 
     /**
-     * threeObject と同じ大きさの円柱の衝突検出範囲を生成し threeObject.userData.collisionShape に代入する。<br/>
-     * <b>※真円かつ、底面と上面が同じ大きさの円柱しか対応していない。つまり、 x, y の scale が等しい必要がある。</b>
+     * threeObject と同じ大きさの円柱の衝突検出範囲を生成し threeObject.userData.collisionShape に代入する。&lt;br/>
+     * &lt;b>※真円かつ、底面と上面が同じ大きさの円柱しか対応していない。つまり、 x, y の scale が等しい必要がある。&lt;/b>
      * @param {THREE.Mesh} threeObject Three.js の物体。THREE.CylinderGeometry を持つ必要がある。
      * @returns {Ammo.btCylinderShape}
      */
@@ -145,8 +173,8 @@ mylib2020.AmmoCollisionBuilder = class {
     }
 
     /**
-     * threeObject と同じ大きさの円錐の衝突検出範囲を生成し threeObject.userData.collisionShape に代入する。<br/>
-     * <b>※底面が真円の円錐しか対応していない。つまり、 x, y の scale が等しい必要がある。</b>
+     * threeObject と同じ大きさの円錐の衝突検出範囲を生成し threeObject.userData.collisionShape に代入する。&lt;br/>
+     * &lt;b>※底面が真円の円錐しか対応していない。つまり、 x, y の scale が等しい必要がある。&lt;/b>
      * @param {THREE.Mesh} threeObject Three.js の物体。THREE.ConeGeometry を持つ必要がある。
      * @returns {Ammo.btConeShape}
      */
@@ -167,10 +195,10 @@ mylib2020.AmmoCollisionBuilder = class {
      * @param {THREE.Vector3} scale 直方体の拡大縮小率。
      * @param {THREE.Vector3} offset 直方体の中心に加算する値。
      * @returns {Object} 
-     * <ul>
-     *   <li>size - 大きさ {x, y, z}</li>
-     *   <li>center - THREE.Vector3</li>
-     * </ul>
+     * &lt;ul>
+     *   &lt;li>size - 大きさ {x, y, z}&lt;/li>
+     *   &lt;li>center - THREE.Vector3&lt;/li>
+     * &lt;/ul>
      */
     calcBoundingBox(threeObject, scale, offset) {
         const bbox = new THREE.Box3();
@@ -187,23 +215,23 @@ mylib2020.AmmoCollisionBuilder = class {
 
 
     /**
-     * threeObject を包むような円柱の衝突検出範囲を生成し threeObject.userData.collisionShape に代入する。<br/>
-     * <b>※真円かつ、底面と上面が同じ大きさの円柱しか生成しない。</b>
+     * threeObject を包むような円柱の衝突検出範囲を生成し threeObject.userData.collisionShape に代入する。&lt;br/>
+     * &lt;b>※真円かつ、底面と上面が同じ大きさの円柱しか生成しない。&lt;/b>
      * @param {THREE.Object3D} threeObject Three.js の物体。
      * @param {Object} params 次のようなキーでパラメータ指定する。null のとき、デフォルト値が使用される。
-     * <ul>
-     *   <li>showCollision - boolean 衝突検知範囲を可視化するか (デフォルト: false)</li>
-     *   <li>axis - string 円柱の中心軸 "x", "y", "z" のいずれか (デフォルト: y)</li>
-     *   <li>scale - THREE.Vector3 衝突検知範囲の拡大縮小率 (デフォルト: x, y, z 全て 1.0)</li>
-     *   <li>offset - THREE.Vector3 衝突検知範囲の中心からのオフセット (デフォルト: x, y, z 全て 0.0)</li>
-     * </ul>
+     * &lt;ul>
+     *   &lt;li>showCollision - boolean 衝突検知範囲を可視化するか (デフォルト: false)&lt;/li>
+     *   &lt;li>axis - string 円柱の中心軸 "x", "y", "z" のいずれか (デフォルト: y)&lt;/li>
+     *   &lt;li>scale - THREE.Vector3 衝突検知範囲の拡大縮小率 (デフォルト: x, y, z 全て 1.0)&lt;/li>
+     *   &lt;li>offset - THREE.Vector3 衝突検知範囲の中心からのオフセット (デフォルト: x, y, z 全て 0.0)&lt;/li>
+     * &lt;/ul>
      * @returns {Ammo.btCompoundShape}
      */
     addBoundingCylinderShape(threeObject, params = null) {
         params = params || {};
         const showCollision = ('showCollision' in params) ? params.showCollision : false;
         const axis = ('axis' in params) ? params.axis.toLowerCase() : "y";
-        if (axis != "x" && axis != "y" && axis != "z") {
+        if (axis != "x" &amp;&amp; axis != "y" &amp;&amp; axis != "z") {
             axis = "y";
         }
         const scale = ('scale' in params) ? params.scale : new THREE.Vector3(1, 1, 1);
@@ -244,11 +272,11 @@ mylib2020.AmmoCollisionBuilder = class {
      * threeObject を包むような球体の衝突検出範囲を生成し threeObject.userData.collisionShape に代入する。
      * @param {THREE.Object3D} threeObject Three.js の物体。
      * @param {Object} params 次のようなキーでパラメータ指定する。null のとき、デフォルト値が使用される。
-     * <ul>
-     *   <li>showCollision - boolean 衝突検知範囲を可視化するか (デフォルト: false)</li>
-     *   <li>scale - THREE.Vector3 衝突検知範囲の拡大縮小率 (デフォルト: x, y, z 全て 1.0)</li>
-     *   <li>offset - THREE.Vector3 衝突検知範囲の中心からのオフセット (デフォルト: x, y, z 全て 0.0)</li>
-     * </ul>
+     * &lt;ul>
+     *   &lt;li>showCollision - boolean 衝突検知範囲を可視化するか (デフォルト: false)&lt;/li>
+     *   &lt;li>scale - THREE.Vector3 衝突検知範囲の拡大縮小率 (デフォルト: x, y, z 全て 1.0)&lt;/li>
+     *   &lt;li>offset - THREE.Vector3 衝突検知範囲の中心からのオフセット (デフォルト: x, y, z 全て 0.0)&lt;/li>
+     * &lt;/ul>
      * @returns {Ammo.btCompoundShape}
      */
     addBoundingSphereShape(threeObject, params = null) {
@@ -276,11 +304,11 @@ mylib2020.AmmoCollisionBuilder = class {
      * threeObject を包むような直方体の衝突検出範囲を生成し threeObject.userData.collisionShape に代入する。
      * @param {THREE.Object3D} threeObject Three.js の物体。
      * @param {Object} params 次のようなキーでパラメータ指定する。null のとき、デフォルト値が使用される。
-     * <ul>
-     *   <li>showCollision - boolean 衝突検知範囲を可視化するか (デフォルト: false)</li>
-     *   <li>scale - THREE.Vector3 衝突検知範囲の拡大縮小率 (デフォルト: x, y, z 全て 1.0)</li>
-     *   <li>offset - THREE.Vector3 衝突検知範囲の中心からのオフセット (デフォルト: x, y, z 全て 0.0)</li>
-     * </ul>
+     * &lt;ul>
+     *   &lt;li>showCollision - boolean 衝突検知範囲を可視化するか (デフォルト: false)&lt;/li>
+     *   &lt;li>scale - THREE.Vector3 衝突検知範囲の拡大縮小率 (デフォルト: x, y, z 全て 1.0)&lt;/li>
+     *   &lt;li>offset - THREE.Vector3 衝突検知範囲の中心からのオフセット (デフォルト: x, y, z 全て 0.0)&lt;/li>
+     * &lt;/ul>
      * @returns {Ammo.btCompoundShape}
      */
     addBoundingBoxShape(threeObject, params = null) {
@@ -304,7 +332,7 @@ mylib2020.AmmoCollisionBuilder = class {
     }
 
     /**
-     * 子を持つ threeObject に対し全ての子が持つ衝突検出範囲を結合して threeObject.userData.collisionShape に代入する。<br/>
+     * 子を持つ threeObject に対し全ての子が持つ衝突検出範囲を結合して threeObject.userData.collisionShape に代入する。&lt;br/>
      * threeObject 自身かその子が threeObject.userData.collisionShape に衝突検出範囲を持っていなければ意味がない。
      * @param {THREE.Object3D} threeObject 子を持つ Three.js の物体。
      * @returns {Ammo.btCompoundShape}
@@ -330,35 +358,27 @@ mylib2020.AmmoCollisionBuilder = class {
     }
 
     /**
-     * threeObject.userData.collisionShape に衝突検出範囲を持つ threeObject に対し剛体（形状が変化しない物体）を生成して threeObject.userData.rigidBody に代入する。<br/>
+     * threeObject.userData.collisionShape に衝突検出範囲を持つ threeObject に対し剛体（形状が変化しない物体）を生成して threeObject.userData.rigidBody に代入する。&lt;br/>
      * threeObject が threeObject.userData.collisionShape に衝突検出範囲を持っていなければ何もしない。
      * @param {THREE.Object3D} threeObject Three.js の物体。
      * @param {Object} params 次のようなキーでパラメータ指定する。null のとき、デフォルト値が使用される。
-     * <ul>
-     *   <li>movable - boolean ユーザが動かす予定がある物体は true にする。(デフォルト: false)</li>
-     *   <li>mass - number 重さ。単位は Kg (デフォルト: 1)</li>
-     *   <li>friction - number 面で接触する物体に対する摩擦。(デフォルト: 0.5)</li>
-     *   <li>rollingFriction - number 線や点で接触する、転がる物体に対する摩擦。(デフォルト: 0.1)</li>
-     *   <li>restitution - number 反発の程度。(デフォルト: 0)</li>
-     *   <li>freezeRotationX - boolean X 軸中心の回転をさせないかどうか。(デフォルト: false)</li>
-     *   <li>freezeRotationY - boolean Y 軸中心の回転をさせないかどうか。(デフォルト: false)</li>
-     *   <li>linearDamping - number 移動に対する空気抵抗。大きいほど減速しやすい。(デフォルト: 0)</li>
-     *   <li>angularDamping - number 回転に対する空気抵抗。大きいほど回転が止まりやすい。(デフォルト: 0)</li>
-     *   <li>margin - number 衝突検出範囲に余裕を持たせる場合の距離。(デフォルト: 0.01)</li>
-     * </ul>
+     * &lt;ul>
+     *   &lt;li>movable - boolean ユーザが動かす予定がある物体は true にする。(デフォルト: false)&lt;/li>
+     *   &lt;li>mass - number 重さ。単位は Kg (デフォルト: 1)&lt;/li>
+     *   &lt;li>friction - number 面で接触する物体に対する摩擦。(デフォルト: 0.5)&lt;/li>
+     *   &lt;li>rollingFriction - number 線や点で接触する、転がる物体に対する摩擦。(デフォルト: 0.1)&lt;/li>
+     *   &lt;li>restitution - number 反発の程度。(デフォルト: 0)&lt;/li>
+     *   &lt;li>freezeRotationX - boolean X 軸中心の回転をさせないかどうか。(デフォルト: false)&lt;/li>
+     *   &lt;li>freezeRotationY - boolean Y 軸中心の回転をさせないかどうか。(デフォルト: false)&lt;/li>
+     *   &lt;li>linearDamping - number 移動に対する空気抵抗。大きいほど減速しやすい。(デフォルト: 0)&lt;/li>
+     *   &lt;li>angularDamping - number 回転に対する空気抵抗。大きいほど回転が止まりやすい。(デフォルト: 0)&lt;/li>
+     *   &lt;li>margin - number 衝突検出範囲に余裕を持たせる場合の距離。(デフォルト: 0.01)&lt;/li>
+     * &lt;/ul>
      */
     addRigidBody(threeObject, params = null) {
         if (threeObject.userData.collisionShape) {
             const rigidBody = this.rigidBody(threeObject.position, threeObject.quaternion, threeObject.userData.collisionShape, params);
             mylib2020.addAmmoRigidBody(threeObject, rigidBody);
-            this.checkMovable(threeObject, params);
-        }
-    }
-    
-    addGhost(threeObject, params = null) {
-        if (threeObject.userData.collisionShape) {
-            const ghost = this.ghost(threeObject.position, threeObject.quaternion, threeObject.userData.collisionShape, params);
-            mylib2020.addAmmoGhost(threeObject, ghost);
             this.checkMovable(threeObject, params);
         }
     }
@@ -370,23 +390,6 @@ mylib2020.AmmoCollisionBuilder = class {
             threeObject.userData.linearVelocity = 0;
             threeObject.userData.angularVelocity = 0;
         }
-    }
-
-    ghost(pos, quat, shape, params = null) {
-        params = params || {};
-        const margin = ('margin' in params) ? params.margin : 0.01;
-        shape.setMargin(margin);
-
-        this.position.setValue(pos.x, pos.y, pos.z);
-        this.rotation.setValue(quat.x, quat.y, quat.z, quat.w);
-        this.transform.setIdentity();
-        this.transform.setOrigin(this.position);
-        this.transform.setRotation(this.rotation);
-
-        const ghost = new Ammo.btGhostObject();
-        ghost.setCollisionShape(shape);
-        ghost.setWorldTransform(this.transform);
-        return ghost;
     }
 
     rigidBody(pos, quat, shape, params = null) {
@@ -450,23 +453,6 @@ mylib2020.AmmoCollisionBuilder = class {
         Ammo.destroy(this.factor);
         Ammo.destroy(this.vertex);
     }
-}
-
-mylib2020.addAmmoGhost = function (threeObject, ghost) {
-    mylib2020.removeAmmoGhost(threeObject);
-    threeObject.userData.ghost = ghost;
-    ghost.threeObject = threeObject;
-}
-
-mylib2020.removeAmmoGhost = function (threeObject) {
-    if (!threeObject.userData.ghost) {
-        return;
-    }
-    if (threeObject.userData.ghost.threeObject) {
-        delete threeObject.userData.ghost.threeObject;
-    }
-    Ammo.destroy(threeObject.userData.ghost);
-    delete threeObject.userData.ghost;
 }
 
 mylib2020.addAmmoRigidBody = function (threeObject, rigidBody) {
@@ -725,10 +711,6 @@ mylib2020.AmmoManager = class {
             this.world.addRigidBody(threeObject.userData.rigidBody);
             threeObject.userData.collision = new mylib2020.AmmoCollisionManager();
         }
-        if (threeObject.userData.ghost) {
-            this.world.addCollisionObject(threeObject.userData.ghost);
-            threeObject.userData.collision = new mylib2020.AmmoCollisionManager();
-        }
     }
 
     /**
@@ -740,7 +722,7 @@ mylib2020.AmmoManager = class {
     }
 
     /**
-     * 物理計算を 1 ステップ行う。<br/>
+     * 物理計算を 1 ステップ行う。&lt;br/>
      * userData.movable が true かつ、 userData.linearVelocity もしくは userData.angularVelocity に速度を持つ物体は移動した上で物理エンジンの影響を受ける。
      * @param {number} delta 経過時間。
      */
@@ -766,7 +748,7 @@ mylib2020.AmmoManager = class {
 
     updateCollision() {
         const numManifolds = this.dispatcher.getNumManifolds();
-        for (let i = 0; i < numManifolds; i++) {
+        for (let i = 0; i &lt; numManifolds; i++) {
             const manifold = this.dispatcher.getManifoldByIndexInternal(i); // btPersistentManifold
             const obA = Ammo.btRigidBody.prototype.upcast(manifold.getBody0()); // btCollisionObject 
             const obB = Ammo.btRigidBody.prototype.upcast(manifold.getBody1()); // btCollisionObject
@@ -775,9 +757,9 @@ mylib2020.AmmoManager = class {
                 continue;
             }
             const numContacts = manifold.getNumContacts(); // オブジェクト間の衝突点数
-            for (let j = 0; j < numContacts; j++) {
+            for (let j = 0; j &lt; numContacts; j++) {
                 const pt = manifold.getContactPoint(j);//btManifoldPoint
-                if (pt.getDistance() <= 0.0) {
+                if (pt.getDistance() &lt;= 0.0) {
                     const ptA = pt.getPositionWorldOnA(); // btVector3
                     const ptB = pt.getPositionWorldOnB(); // btVector3
                 }
@@ -800,10 +782,6 @@ mylib2020.AmmoManager = class {
             this.world.removeRigidBody(threeObject.userData.rigidBody);
             mylib2020.removeAmmoRigidBody(threeObject);
             mylib2020.removeAmmoShapeRecursive(threeObject);
-        }
-        if (threeObject.userData.ghost) {
-            this.world.removeCollisionObject(threeObject.userData.ghost);
-            mylib2020.removeAmmoGhost(threeObject);
         }
     }
 
@@ -840,3 +818,26 @@ mylib2020.AmmoManager = class {
         Ammo.destroy(this.collisionConfiguration);
     }
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="mylib2020.html">mylib2020</a></li></ul><h3>Classes</h3><ul><li><a href="MyGameCharacter.html">MyGameCharacter</a></li><li><a href="MyGameItem.html">MyGameItem</a></li><li><a href="mylib2020.AmmoCollisionBuilder.html">AmmoCollisionBuilder</a></li><li><a href="mylib2020.AmmoCollisionManager.html">AmmoCollisionManager</a></li><li><a href="mylib2020.AmmoManager.html">AmmoManager</a></li><li><a href="mylib2020.AmmoRigidBodyPose.html">AmmoRigidBodyPose</a></li><li><a href="mylib2020.ArrowButton.html">ArrowButton</a></li><li><a href="MyMaze.html">MyMaze</a></li></ul><h3>Global</h3><ul><li><a href="global.html#MyMazeTestData">MyMazeTestData</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Wed Mar 11 2020 11:07:08 GMT+0900 (GMT+09:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
