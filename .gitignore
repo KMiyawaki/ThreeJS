@@ -56,3 +56,5 @@ CATKIN_IGNORE
 /js/OrbitControls.js
 work*.html
 
+# downloaded glb files
+/assets/downloads/*.glb
