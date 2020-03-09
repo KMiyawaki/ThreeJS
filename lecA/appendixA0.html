@@ -6,17 +6,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Scene</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/build/three.min.js"></script>
-    <script type="text/javascript"
-        src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/controls/OrbitControls.js"></script>
     <!-- GLTF モデルロードに必要 -->
     <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/loaders/GLTFLoader.js"></script>
     <!-- 物理エンジン Ammo -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/kripken/ammo.js@aab297a4164779c3a9d8dc8d9da26958de3cb778/builds/ammo.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/gh/kripken/ammo.js@aab297a4164779c3a9d8dc8d9da26958de3cb778/builds/ammo.js"></script>
     <!-- アニメーションライブラリ TweenMax -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/greensock@1.20.2/dist/TweenMax.min.js"></script>
-    <script type="text/javascript" src="../js/myThree2020.js"></script>
-    <script type="text/javascript" src="../js/myAmmo2020.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/greensock@1.20.2/dist/TweenMax.min.js"></script>
+    <script src="../js/myThree2020.js"></script>
+    <script src="../js/myAmmo2020.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/common.css">
 </head>
 
@@ -80,22 +80,25 @@
                 function (gltf) { // モデルロードに成功
                     rocket = gltf.scene;
                     rocket.name = "Rocket";
-                    rocket.position.set(0, 1, 0);
-                    /* ロケットを囲むように衝突検出範囲を設定する。
-                     addBoundingSphereShape など、他の衝突判定形状も試してみよう。
-                     scale や offset 、addBoundingCylinderShape の場合は axis も変更してみよう。*/
-                    ammo.collisionBuilder.addBoundingBoxShape(rocket, { showCollision: true, scale: new THREE.Vector3(1, 0.7, 1) });
-                    // ammo.collisionBuilder.addBoundingSphereShape(rocket, { showCollision: true, scale: new THREE.Vector3(0.6, 1, 1) });
-                    // ammo.collisionBuilder.addBoundingCylinderShape(rocket, { showCollision: true, axis: "z", scale: new THREE.Vector3(0.4, 0.4, 1), offset: new THREE.Vector3(0, -0.5, 0) });
-                    /* ロケットに物理的属性を追加する
+                    rocket.position.set(5, 3, 0);
+                    /* ロケットを囲むように衝突検出範囲を設定し、物理的属性を追加する。
+                     showCollision: 衝突検出範囲を可視化するか否か。
+                     scale: 衝突検出範囲の拡大縮小率。
                      movable: ユーザプログラム側で移動させる可能性がある場合、true にする。
                      mass: 重さ（0 にすると、他の物体が衝突しても動かない）
                      friction: 摩擦
                      restitution: 反発 
                      freezeRotationX/Y/Z: 指定した軸中心の回転をさせないようにする。
                      angularDamping: 回転速度の減衰。デフォルトは 0（摩擦の影響だけで回転速度が減速する）。
-                     */
-                    ammo.collisionBuilder.addRigidBody(rocket, { movable: true, mass: 100, friction: 0.9, restitution: 0.1, freezeRotationX: true, freezeRotationZ: true, angularDamping: 0.8 });
+                    */
+                    ammo.collisionBuilder.addBoundingBoxRigidBody(rocket, {
+                        showCollision: true, scale: new THREE.Vector3(1, 0.7, 1),
+                        movable: true, mass: 100, friction: 0.9, restitution: 0.1, freezeRotationX: true, freezeRotationZ: true, angularDamping: 0.8
+                    });
+                    /* addBoundingSphereRigidBody など、他の衝突判定形状も試してみよう。
+                     scale や offset 、addBoundingCylinderRigidBody の場合は axis も変更してみよう。*/
+                    // ammo.collisionBuilder.addBoundingSphereRigidBody(rocket, { showCollision: true, scale: new THREE.Vector3(0.6, 1, 1), movable: true, mass: 100, friction: 0.9, restitution: 0.1, freezeRotationX: true, freezeRotationZ: true, angularDamping: 0.8 });
+                    // ammo.collisionBuilder.addBoundingCylinderRigidBody(rocket, { showCollision: true, axis: "z", scale: new THREE.Vector3(0.4, 0.4, 1), offset: new THREE.Vector3(0, -0.5, 0), movable: true, mass: 100, friction: 0.9, restitution: 0.1, freezeRotationX: true, freezeRotationZ: true, angularDamping: 0.8 });
                     /* ロケットを物理計算対象としてシーンに追加する */
                     ammo.registerObject(rocket);
                     rocket.add(new THREE.AxesHelper(2)); // ローカル座標軸を表示。
@@ -119,13 +122,11 @@
             plane.rotation.x = THREE.Math.degToRad(-90);
             plane.receiveShadow = true; /* 他の物体から影が落ちる */
             plane.userData.originalColor = plane.material.color.clone();
-            /* 平面に衝突検出範囲を設定する。 */
-            ammo.collisionBuilder.addPlaneShape(plane);
-            /* 平面に物理的属性を追加する 
+            /* 平面に衝突検出範囲を設定し、物理的属性を追加する 
             　mass: 重さ（0 にすると、他の物体が衝突しても動かない）
             　friction: 摩擦
             　restitution: 反発 */
-            ammo.collisionBuilder.addRigidBody(plane, { mass: 0, friction: 1, restitution: 0.9 });
+            ammo.collisionBuilder.addPrimitiveRigidBody(plane, { mass: 0, friction: 1, restitution: 0.9 });
             /* 平面を物理計算対象としてシーンに追加する */
             ammo.registerObject(plane);
 
@@ -148,12 +149,10 @@
                 box[i].castShadow = true; /* 他の物体に影を落とす */
                 box[i].receiveShadow = true; /* 他の物体から影が落ちる */
                 box[i].userData.originalColor = box[i].material.color.clone();
-                /* 直方体に衝突検出範囲を設定する。 */
-                ammo.collisionBuilder.addBoxShape(box[i]);
-                /* 平面に物理的属性を追加する 
+                /* 直方体に衝突検出範囲を設定し、物理的属性を追加する 
                  mass: 重さ（0 にすると、他の物体が衝突しても動かない）
                  movable: ユーザプログラム側で移動させる可能性がある場合、true にする。 */
-                ammo.collisionBuilder.addRigidBody(box[i], { mass: 0, movable: true });
+                ammo.collisionBuilder.addPrimitiveRigidBody(box[i], { mass: 0, movable: true });
                 /* 直方体を物理計算対象としてシーンに追加する */
                 ammo.registerObject(box[i]);
             }
@@ -172,19 +171,15 @@
             board.castShadow = true; /* 他の物体に影を落とす */
             board.receiveShadow = true; /* 他の物体から影が落ちる */
             board.userData.originalColor = board.material.color.clone();
-            /* 直方体に衝突検出範囲を設定する。物理的属性は親子関係構築後に親物体に対して付与する。 */
-            ammo.collisionBuilder.addBoxShape(board);
             const shaft = new THREE.Object3D();
             shaft.name = "RotBoard";
             shaft.add(board);
             shaft.rotateZ(THREE.Math.degToRad(5));
             shaft.position.set(-2, 0, 0);
-            /* 子供の持つ衝突範囲を含めて親に衝突検出範囲を設定する。 */
-            ammo.collisionBuilder.addCompoundShape(shaft);
-            /* 回転板に物理的属性を追加する 
+            /* 親子関係のある物体に衝突検出範囲を設定し、物理的属性を追加する 。
              mass: 重さ（0 にすると、他の物体が衝突しても動かない）
              movable: ユーザプログラム側で移動させる可能性がある場合、true にする。 */
-            ammo.collisionBuilder.addRigidBody(shaft, { mass: 0, movable: true });
+            ammo.collisionBuilder.addCompoundRigidBody(shaft, { mass: 0, movable: true });
             /* 回転板を物理計算対象としてシーンに追加する */
             ammo.registerObject(shaft);
             /* TweenMax によるアニメーション設定
@@ -202,13 +197,11 @@
             sphere.receiveShadow = true;
             sphere.add(new THREE.AxesHelper(1));  // ローカル座標軸を表示。
             sphere.userData.originalColor = sphere.material.color.clone();
-            /* 球体に衝突検出範囲を設定する。 */
-            ammo.collisionBuilder.addSphereShape(sphere);
-            /* 球体に物理的属性を追加する
+            /* 球体に衝突検出範囲を設定して、物理的属性を追加する
              mass: 重さ（0 にすると、他の物体が衝突しても動かない）
              friction: 摩擦
              restitution: 反発 */
-            ammo.collisionBuilder.addRigidBody(sphere, { mass: 10, friction: 0.9, restitution: 0.9 });
+            ammo.collisionBuilder.addPrimitiveRigidBody(sphere, { mass: 10, friction: 0.9, restitution: 0.9 });
             /* 球体を物理計算対象としてシーンに追加する */
             ammo.registerObject(sphere);
 
@@ -219,10 +212,8 @@
             cylinder.scale.set(2, 1, 2);
             cylinder.position.set(-3, 10, 3.5);
             cylinder.userData.originalColor = cylinder.material.color.clone();
-            /* 円柱に衝突検出範囲を設定する。 */
-            ammo.collisionBuilder.addCylinderShape(cylinder);
-            /* 円柱に物理的属性を追加する */
-            ammo.collisionBuilder.addRigidBody(cylinder);
+            /* 円柱に衝突検出範囲を設定して、物理的属性を追加する */
+            ammo.collisionBuilder.addPrimitiveRigidBody(cylinder);
             /* 円柱を物理計算対象としてシーンに追加する */
             ammo.registerObject(cylinder);
             /* TweenMax によるアニメーション設定
@@ -241,10 +232,8 @@
             cone.castShadow = true;
             cone.receiveShadow = true;
             cone.userData.originalColor = cone.material.color.clone();
-            /* 円錐に衝突検出範囲を設定する。 */
-            ammo.collisionBuilder.addConeShape(cone);
-            /* 円錐に物理的属性を追加する */
-            ammo.collisionBuilder.addRigidBody(cone);
+            /* 円錐に衝突検出範囲を設定して、物理的属性を追加する */
+            ammo.collisionBuilder.addPrimitiveRigidBody(cone);
             /* 円錐を物理計算対象としてシーンに追加する */
             ammo.registerObject(cone);
 
