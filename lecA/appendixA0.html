@@ -13,8 +13,8 @@
     <!-- 物理エンジン Ammo -->
     <script
         src="https://cdn.jsdelivr.net/gh/kripken/ammo.js@aab297a4164779c3a9d8dc8d9da26958de3cb778/builds/ammo.js"></script>
-    <!-- アニメーションライブラリ TweenMax -->
-    <script src="https://cdn.jsdelivr.net/npm/greensock@1.20.2/dist/TweenMax.min.js"></script>
+    <!-- アニメーションライブラリ GSAP: GreenSock Animation Platform -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.4/gsap.min.js"></script>
     <script src="../js/myThree2020.js"></script>
     <script src="../js/myAmmo2020.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/common.css">
@@ -156,18 +156,23 @@
                 /* 直方体を物理計算対象としてシーンに追加する */
                 ammo.registerObject(box[i]);
             }
-            /* TweenMax によるアニメーション設定
+            /* GSAP によるアニメーション設定
              repeat: 繰り返し回数指定。-1 で無限ループ。
              yoyo: true にすると、現在値->指定した値->現在値... のように値を往復させられる。 */
-            TweenMax.to(box[0].rotation, 2, { y: THREE.Math.degToRad(90), repeat: -1, yoyo: true }); // rotation.y の値を 0<->90 の範囲で往復させる。 
-            TweenMax.to(box[1].position, 1, { x: 2, repeat: -1, yoyo: true }); // position.x の値を 0<->2 の範囲で往復させる。
-            TweenMax.to(box[2].position, 1, { x: -2, repeat: -1, yoyo: true });  // position.x の値を 0<->-2 の範囲で往復させる。
+            box[0].userData.rotY; // 変化する値の保存場所。
+            gsap.fromTo(box[0].userData, 2, { rotY: THREE.Math.degToRad(0) },
+                {
+                    rotY: THREE.Math.degToRad(120), repeat: -1, yoyo: true,
+                    onUpdate: function () { box[0].setRotationFromEuler(new THREE.Euler(0, box[0].userData.rotY, 0)); }
+                }); // box[0].userData.rotY の値を 0<->90 の範囲で往復させる。
+            gsap.to(box[1].position, 1, { x: 2, repeat: -1, yoyo: true }); // position.x の値を 0<->2 の範囲で往復させる。
+            gsap.to(box[2].position, 1, { x: -2, repeat: -1, yoyo: true });  // position.x の値を 0<->-2 の範囲で往復させる。
 
             /* 回転板の作成（親子関係のある物体） */
-            const board = new THREE.Mesh(boxGeometry, new THREE.MeshPhongMaterial({ color: boxColor }));
+            const board = new THREE.Mesh(boxGeometry, new THREE.MeshPhongMaterial({ color: 0x00FF00 }));
             board.name = "Board";
             board.scale.set(5, 0.2, 2);
-            board.position.set(2.5, 0.1, 0);
+            board.position.set(2.5, 0, 0);
             board.castShadow = true; /* 他の物体に影を落とす */
             board.receiveShadow = true; /* 他の物体から影が落ちる */
             board.userData.originalColor = board.material.color.clone();
@@ -175,17 +180,27 @@
             shaft.name = "RotBoard";
             shaft.add(board);
             shaft.rotateZ(THREE.Math.degToRad(5));
-            shaft.position.set(-2, 0, 0);
+            shaft.position.set(0, -0.1, 0);
             /* 親子関係のある物体に衝突検出範囲を設定し、物理的属性を追加する 。
              mass: 重さ（0 にすると、他の物体が衝突しても動かない）
+             friction: 摩擦
              movable: ユーザプログラム側で移動させる可能性がある場合、true にする。 */
-            ammo.collisionBuilder.addCompoundRigidBody(shaft, { mass: 0, movable: true });
+            ammo.collisionBuilder.addCompoundRigidBody(shaft, { mass: 0, restitution: 0.5, movable: true });
             /* 回転板を物理計算対象としてシーンに追加する */
             ammo.registerObject(shaft);
-            /* TweenMax によるアニメーション設定
+            /* GSAP によるアニメーション設定
              repeat: 繰り返し回数指定。-1 で無限ループ。
              yoyo: true にすると、現在値->指定した値->現在値... のように値を往復させられる。 */
-            TweenMax.to(shaft.rotation, 3, { z: THREE.Math.degToRad(180), repeat: -1, yoyo: true }); // rotation.z の値を 5<->180 の範囲で往復させる。
+            shaft.userData.rotZ; // 変化する値の保存場所。
+            gsap.fromTo(shaft.userData, 3, { rotZ: THREE.Math.degToRad(5) },
+                {
+                    rotZ: THREE.Math.degToRad(180), // box.userData.rotZ の値を 5<->180 の範囲で往復させる。
+                    repeat: -1,
+                    yoyo: true,
+                    onUpdate: function () {
+                        shaft.setRotationFromEuler(new THREE.Euler(0, 0, shaft.userData.rotZ)); // 値更新時に実行したい処理
+                    }
+                });
 
             /* 球体の生成 */
             const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.4, 20, 20),
@@ -216,10 +231,10 @@
             ammo.collisionBuilder.addPrimitiveRigidBody(cylinder);
             /* 円柱を物理計算対象としてシーンに追加する */
             ammo.registerObject(cylinder);
-            /* TweenMax によるアニメーション設定
+            /* GSAP によるアニメーション設定
              repeat: 繰り返し回数指定。-1 で無限ループ。
              yoyo: true にすると、現在値->指定した値->現在値... のように値を往復させられる。 */
-            TweenMax.to(cylinder.material, 3, { opacity: 0, repeat: -1, yoyo: true }); // material.opacity の値を 0<->1 の範囲で往復させる。
+            gsap.to(cylinder.material, 3, { opacity: 0, repeat: -1, yoyo: true }); // material.opacity の値を 0<->1 の範囲で往復させる。
 
             /* 円錐の生成 */
             const cone = new THREE.Mesh(new THREE.ConeGeometry(0.4, 0.8, 20, 32),

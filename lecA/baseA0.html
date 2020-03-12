@@ -13,8 +13,8 @@
     <!-- 物理エンジン Ammo -->
     <script
         src="https://cdn.jsdelivr.net/gh/kripken/ammo.js@aab297a4164779c3a9d8dc8d9da26958de3cb778/builds/ammo.js"></script>
-    <!-- アニメーションライブラリ TweenMax -->
-    <script src="https://cdn.jsdelivr.net/npm/greensock@1.20.2/dist/TweenMax.min.js"></script>
+    <!-- アニメーションライブラリ GSAP: GreenSock Animation Platform -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.4/gsap.min.js"></script>
     <script src="../js/myThree2020.js"></script>
     <script src="../js/myAmmo2020.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/common.css">
@@ -63,6 +63,16 @@
             Ammo();
             const ammo = new mylib2020.AmmoManager(scene);
 
+            /* ↓↓↓workA1(6) の追記場所 [その 1] ↓↓↓ */
+            /* サウンド関連 */
+
+            /* ↑↑↑workA1(6) の追記場所 [その 1] ↑↑↑ */
+
+
+            /* ↓↓↓workA1(2) の追記場所↓↓↓ */
+
+            /* ↑↑↑workA1(2) の追記場所↑↑↑ */
+
             /* 平面の生成 */
             const mapTexture = new THREE.TextureLoader().load("../assets/downloads/DesolatedHut.png");
             mapTexture.wrapS = THREE.RepeatWrapping;
@@ -79,15 +89,26 @@
             plane.receiveShadow = true; /* 他の物体から影が落ちる */
             plane.userData.originalColor = plane.material.color.clone();
             /* 平面に衝突検出範囲を設定し、物理的属性を追加する 
-                         mass: 重さ（0 にすると、他の物体が衝突しても動かない）
-                         friction: 摩擦
-                         restitution: 反発 */
+             mass: 重さ（0 にすると、他の物体が衝突しても動かない）
+             friction: 摩擦
+             restitution: 反発 */
             ammo.collisionBuilder.addPrimitiveRigidBody(plane, { mass: 0, friction: 1, restitution: 0.9 });
             /* 平面を物理計算対象としてシーンに追加する */
             ammo.registerObject(plane);
-            /* ↓↓↓workA1 の追記場所↓↓↓ */
-            
-            /* ↑↑↑workA1 の追記場所↑↑↑ */
+
+            /* ↓↓↓workA1(1) の追記場所↓↓↓ */
+
+            /* ↑↑↑workA1(1) の追記場所↑↑↑ */
+
+
+            /* ↓↓↓workA1(4) の追記場所↓↓↓ */
+
+            /* ↑↑↑workA1(4) の追記場所↑↑↑ */
+
+
+            /* ↓↓↓workA1(5) の追記場所↓↓↓ */
+
+            /* ↑↑↑workA1(5) の追記場所↑↑↑ */
 
             /* 球体の生成 */
             const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.4, 20, 20),
@@ -128,6 +149,8 @@
                 const deltaTime = clock.getDelta();
                 orbitControls.update(deltaTime);
                 ammo.update(deltaTime);
+
+                /* ↓↓↓workA1(3) の追記・修正場所↓↓↓ */
                 if (true) { // 意味のない if 文。演習の都合上、if 文の構造を保つために記述している。
                     if (arrows["up"].isPressed()) {
                         taDebugText.value += "up\n";
@@ -141,6 +164,11 @@
                     if (arrows["right"].isPressed()) {
                         taDebugText.value += "right\n";
                     }
+                    /* ↑↑↑workA1(3) の追記・修正場所↑↑↑ */
+
+                    /* ↓↓↓workA1(6) の追記・修正場所 [その 2] ↓↓↓ */
+
+                    /* ↑↑↑workA1(6) の追記・修正場所 [その 2] ↑↑↑ */
                 }
 
                 for (let object of ammo.targetObjects) {
