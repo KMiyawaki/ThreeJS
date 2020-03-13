@@ -195,15 +195,16 @@ mylib2020.AmmoCollisionBuilder = class {
     /**
      * 基本的な形状を geometry に持つ threeObject に対して同じ大きさの衝突検出範囲を生成し、threeObject.userData.collisionShape に代入する。<br/>
      * さらに、その形状に基づく剛体を生成して threeObject.userData.rigidBody に代入する。<br/>
+     * @param {THREE.Object3D} threeObject Three.js の物体。
      * 対応する形状は次の通り。 threeObject.geometry が下記のいずれかでなければならない。
      * <ul>
      *   <li>THREE.PlaneGeometry</li>
      *   <li>THREE.BoxGeometry</li>
      *   <li>THREE.SphereGeometry</li>
      *   <li>THREE.CylinderGeometry<br/>
-     *     <b>※真円かつ、底面と上面が同じ大きさの円柱しか対応していない。つまり、 x, y の scale が等しい必要がある。</b></li>
+     *     <b>※真円かつ、底面と上面が同じ大きさの円柱しか対応していない。つまり、 x, z の scale が等しい必要がある。</b></li>
      *   <li>THREE.ConeGeometry<br/>
-     *     <b>※底面が真円の円錐しか対応していない。つまり、 x, y の scale が等しい必要がある。</b></li>
+     *     <b>※底面が真円の円錐しか対応していない。つまり、 x, z の scale が等しい必要がある。</b></li>
      * </ul>
      * @param {Object} params 次のようなキーでパラメータ指定する。null のとき、デフォルト値が使用される。
      * <ul>
@@ -342,9 +343,9 @@ mylib2020.AmmoCollisionBuilder = class {
      *   <li>THREE.BoxGeometry</li>
      *   <li>THREE.SphereGeometry</li>
      *   <li>THREE.CylinderGeometry<br/>
-     *     <b>※真円かつ、底面と上面が同じ大きさの円柱しか対応していない。つまり、 x, y の scale が等しい必要がある。</b></li>
+     *     <b>※真円かつ、底面と上面が同じ大きさの円柱しか対応していない。つまり、 x, z の scale が等しい必要がある。</b></li>
      *   <li>THREE.ConeGeometry<br/>
-     *     <b>※底面が真円の円錐しか対応していない。つまり、 x, y の scale が等しい必要がある。</b></li>
+     *     <b>※底面が真円の円錐しか対応していない。つまり、 x, z の scale が等しい必要がある。</b></li>
      * </ul>
      * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
      * @param {THREE.Mesh} threeObject
@@ -414,7 +415,7 @@ mylib2020.AmmoCollisionBuilder = class {
 
     /**
      * threeObject と同じ大きさの円柱の衝突検出範囲を生成し threeObject.userData.collisionShape に代入する。<br/>
-     * <b>※真円かつ、底面と上面が同じ大きさの円柱しか対応していない。つまり、 x, y の scale が等しい必要がある。</b>
+     * <b>※真円かつ、底面と上面が同じ大きさの円柱しか対応していない。つまり、 x, z の scale が等しい必要がある。</b>
      * @param {THREE.Mesh} threeObject Three.js の物体。THREE.CylinderGeometry を持つ必要がある。
      * @returns {Ammo.btCylinderShape}
      */
@@ -426,7 +427,7 @@ mylib2020.AmmoCollisionBuilder = class {
 
     /**
      * threeObject と同じ大きさの円錐の衝突検出範囲を生成し threeObject.userData.collisionShape に代入する。<br/>
-     * <b>※底面が真円の円錐しか対応していない。つまり、 x, y の scale が等しい必要がある。</b>
+     * <b>※底面が真円の円錐しか対応していない。つまり、 x, z の scale が等しい必要がある。</b>
      * @param {THREE.Mesh} threeObject Three.js の物体。THREE.ConeGeometry を持つ必要がある。
      * @returns {Ammo.btConeShape}
      */
@@ -746,7 +747,7 @@ mylib2020.AmmoCollisionBuilder = class {
         params = params || {};
         const mass = ('mass' in params) ? params.mass : 1;
         const friction = ('friction' in params) ? params.friction : 0.5;
-        const rollingFriction = ('rollingFriction' in params) ? params.friction : 0.1;
+        const rollingFriction = ('rollingFriction' in params) ? params.rollingFriction : 0.0;
         const restitution = ('restitution' in params) ? params.restitution : 0;
         const kinematic = ('kinematic' in params) ? params.kinematic : false;
         const freezeRotationX = ('freezeRotationX' in params) ? params.freezeRotationX : false;

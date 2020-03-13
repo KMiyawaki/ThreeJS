@@ -6,4 +6,4 @@
 
 ## [lec03](./lec03/base30.html)
 
-## [appendix 1](./lecA1/appendixA0.html)
+## [appendix 1](./lecA/appendixA0.html)
