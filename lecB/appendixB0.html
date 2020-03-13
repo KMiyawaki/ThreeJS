@@ -15,7 +15,7 @@
     <script type="text/javascript"
         src="https://cdn.jsdelivr.net/gh/kripken/ammo.js@aab297a4164779c3a9d8dc8d9da26958de3cb778/builds/ammo.js"></script>
     <!-- アニメーションライブラリ TweenMax -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/greensock@1.20.2/dist/TweenMax.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.4/gsap.min.js"></script>
     <script type="text/javascript" src="../js/myThree2020.js"></script>
     <script type="text/javascript" src="../js/myAmmo2020.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/common.css">
@@ -46,8 +46,7 @@
             /* GLTF モデルデータをロードする。 THREE.GLTFLoader は Three.js 本体には含まれていないことに注意 */
             let shuttle = null;
             const modelUrl = "../assets/downloads/Shuttle_min.glb";
-            const modelLoader = new THREE.GLTFLoader();
-            modelLoader.load(modelUrl, // この関数は非同期的に実行される。
+            new THREE.GLTFLoader().load(modelUrl, // この関数は非同期的に実行される。
                 function (gltf) { // モデルロードに成功
                     shuttle = gltf.scene;
                     shuttle.name = "Shuttle";
