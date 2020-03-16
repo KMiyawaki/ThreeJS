@@ -51,6 +51,8 @@ mylib2020.calcScreenSize = function (aspect, viewPortWidth, viewPortHeight) {
  *   <li>camPosX - number カメラの初期位置。(デフォルト: 0)</li>
  *   <li>camPosY - number カメラの初期位置。(デフォルト: 2)</li>
  *   <li>camPosZ - number カメラの初期位置。(デフォルト: -7)</li>
+ *   <li>gammaInput - boolean レンダラの gammaInput。(デフォルト: true)</li>
+ *   <li>gammaOutput - boolean レンダラの gammaOutput。(デフォルト: true)</li>
  * </ul>
  * @returns {Array} 次の要素が入った配列。
  * <ul>
@@ -72,10 +74,13 @@ mylib2020.initThree = function (width, height, opts) {
     const camPosX = ('camPosX' in opts) ? opts.camPosX : 0;
     const camPosY = ('camPosY' in opts) ? opts.camPosY : 2;
     const camPosZ = ('camPosZ' in opts) ? opts.camPosZ : -7;
+    const gammaInput = ('gammaInput' in opts) ? opts.gammaInput : true;
+    const gammaOutput = ('gammaOutput' in opts) ? opts.gammaOutput : true;
+    const antialias = ('antialias' in opts) ? opts.antialias : true;
 
     let scene = new THREE.Scene();
     let camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    let renderer = new THREE.WebGLRenderer({ antialias: true });
+    let renderer = new THREE.WebGLRenderer({ antialias: antialias });
     let clock = new THREE.Clock();
     let axes = null;
     if (axesLength > 0) {
@@ -85,6 +90,8 @@ mylib2020.initThree = function (width, height, opts) {
     renderer.setClearColor(new THREE.Color(clearColor));
     renderer.setSize(width, height);
     renderer.shadowMap.enabled = true;
+    renderer.gammaInput = gammaInput;
+    renderer.gammaOutput = gammaOutput;
     camera.position.x = camPosX;
     camera.position.y = camPosY;
     camera.position.z = camPosZ;
