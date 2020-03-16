@@ -23,7 +23,7 @@ mylib2020.BACK = new THREE.Vector3(0, 0, -1);
 
 mylib2020.createRectSize = function (x, y, w, h) {
     return { x: x, y: y, width: w, height: h };
-}
+};
 
 mylib2020.calcScreenSize = function (aspect, viewPortWidth, viewPortHeight) {
     let w = viewPortWidth
@@ -34,7 +34,7 @@ mylib2020.calcScreenSize = function (aspect, viewPortWidth, viewPortHeight) {
         w = h * aspect;
     }
     return mylib2020.createRectSize(0, 0, w, h);
-}
+};
 
 
 /**
@@ -90,7 +90,7 @@ mylib2020.initThree = function (width, height, opts) {
     camera.position.z = camPosZ;
     camera.lookAt(new THREE.Vector3(0, -0.5, 0));
     return [scene, camera, renderer, clock, axes];
-}
+};
 
 /**
  * Three.js を初期化し、シーンを生成する。
@@ -120,7 +120,7 @@ mylib2020.initThreeInElement = function (element, opts) {
     let [scene, camera, renderer, clock, axes] = mylib2020.initThree(rect.width, rect.height, opts);
     element.appendChild(renderer.domElement);
     return [scene, camera, renderer, clock, axes];
-}
+};
 
 
 /**
@@ -143,7 +143,7 @@ mylib2020.checkCollision = function (fromObject, targetMeshes, direction, distan
         }
     }
     return false;
-}
+};
 
 mylib2020.initPushButton = function (element, activeColor, onPressed = null, onReleased = null, normalColor = null) {
     const supportTouch = 'ontouchend' in document;
@@ -181,8 +181,7 @@ mylib2020.initPushButton = function (element, activeColor, onPressed = null, onR
             }
         });
     }
-
-}
+};
 
 /**
  * キャラクタ操作用のデジタルな十字キーのボタンを生成する。
@@ -311,4 +310,4 @@ mylib2020.ArrowButton = class {
         this.outputLog('onMouseLeave:');
         this.release();
     }
-}
+};
