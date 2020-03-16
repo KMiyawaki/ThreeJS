@@ -6,18 +6,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Scene</title>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/build/three.min.js"></script>
-    <script type="text/javascript"
-        src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/controls/OrbitControls.js"></script>
     <!-- GLTF モデルロードに必要 -->
     <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/loaders/GLTFLoader.js"></script>
     <!-- 物理エンジン Ammo -->
-    <script type="text/javascript"
-        src="https://cdn.jsdelivr.net/gh/kripken/ammo.js@aab297a4164779c3a9d8dc8d9da26958de3cb778/builds/ammo.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/kripken/ammo.js@aab297a4164779c3a9d8dc8d9da26958de3cb778/builds/ammo.js"></script>
     <!-- アニメーションライブラリ TweenMax -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.4/gsap.min.js"></script>
-    <script type="text/javascript" src="../js/myThree2020.js"></script>
-    <script type="text/javascript" src="../js/myAmmo2020.js"></script>
+    <script src="../js/myThree2020.js"></script>
+    <script src="../js/myAmmo2020.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/common.css">
 </head>
 
@@ -28,7 +26,7 @@
             <textarea id="debugText" rows="12" cols="30" class="debugText">Debug output</textarea>
         </div>
     </div>
-    <script type="text/javascript">
+    <script>
         function init() {
             /* 主要な HTML 要素の取得 */
             const divScreen = document.getElementById("screen");
