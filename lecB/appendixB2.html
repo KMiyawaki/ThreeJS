@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scene</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/build/three.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/controls/OrbitControls.js"></script>
+    <!-- GLTF モデルロードに必要 -->
+    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/loaders/GLTFLoader.js"></script>
+    <!-- FBX モデルロードに必要 -->
+    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/loaders/FBXLoader.js"></script>
+    <!-- 物理エンジン Ammo -->
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/gh/kripken/ammo.js@aab297a4164779c3a9d8dc8d9da26958de3cb778/builds/ammo.js"></script>
+    <!-- アニメーションライブラリ TweenMax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.4/gsap.min.js"></script>
+    <script type="text/javascript" src="../js/myThree2020.js"></script>
+    <script type="text/javascript" src="../js/myAmmo2020.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+</head>
+
+<body>
+    <div id="screen" class="screen">
+        <div id="glView" style="position: relative;height: 100%;">
+            <!--textarea id="debugText" rows="8" cols="20" class="debugText" style="display: none;">Debug output</textarea> デバッグ用表示を無くしたいときはこちらを有効にする。-->
+            <textarea id="debugText" rows="12" cols="30" class="debugText">Debug output</textarea>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function init() {
+            /* 主要な HTML 要素の取得 */
+            const divScreen = document.getElementById("screen");
+            const divGlView = document.getElementById("glView");
+            const taDebugText = document.getElementById("debugText");
+
+            /* デバッグ用の出力 */
+            const AUTO_SCROLL_DEBUG = false; // taDebugText を常に最新の行までスクロールさせるかどうか。
+            taDebugText.value = ("ViewPort: " + window.innerWidth + "," + window.innerHeight + "\n");
+
+            /* THREE.js の初期化 */
+            const [scene, camera, renderer, clock, axes] = mylib2020.initThreeInElement(divGlView);
+            camera.position.set(5, 5, 5);
+
+            /* GLTF モデルデータをロードする。 THREE.GLTFLoader は Three.js 本体には含まれていないことに注意 */
+            let gltfModel = null;
+            let mixer = null;
+            let actions = null;
+            const modelUrl = "../assets/downloads/Mixamo/paladin_prop_j_nordstrom_min.glb";
+            new THREE.GLTFLoader().load(modelUrl, // この関数は非同期的に実行される。
+                function (gltf) { // モデルロードに成功
+                    gltfModel = gltf.scene;
+                    gltfModel.name = "gltfModel";
+                    gltfModel.position.set(1, 1, 0.5);
+                    gltfModel.scale.set(0.01, 0.01, 0.01);
+                    gltfModel.rotateY(THREE.Math.degToRad(30));
+                    gltfModel.add(new THREE.AxesHelper(1)); // ローカル座標軸を表示。
+                    mixer = new THREE.AnimationMixer(gltfModel);
+                    actions = [];
+                    for (a of gltf.animations) {
+                        actions.push(mixer.clipAction(a));
+                    }
+                    scene.add(gltfModel);
+                    taDebugText.value += "Load:" + modelUrl + "\n";
+
+                    const modelUrl2 = "../assets/downloads/Mixamo/Kicking.glb";
+                    new THREE.GLTFLoader().load(modelUrl2, // この関数は非同期的に実行される。
+                        function (gltf) { // モデルロードに成功
+                            for (a of gltf.animations) {
+                                actions.push(mixer.clipAction(a));
+                            }
+                            actions[1].play();
+                        }, null, function (error) { console.log("Error") });
+
+                }, null, function (error) {
+                    taDebugText.value += "Failed to load:" + modelUrl + "\n";
+                    taDebugText.value += "error:" + error + "\n";
+                }
+            );
+
+            /* 平面の生成 */
+            const plane = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshPhongMaterial({ color: 0xCCFFCC }));
+            plane.rotateX(THREE.Math.degToRad(-90)); /* X 軸中心に90度回転 */
+            plane.receiveShadow = true; /* 他の物体の影が落ちる */
+            scene.add(plane);
+
+            /* 平行光源の生成 */
+            const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1.0); /* 色は白、強さは 1.0 */
+            directionalLight.castShadow = true; /* 他の物体に影を落とす */
+            directionalLight.position.set(5, 5, 5);        /* 座標(5,5,5)から */
+            directionalLight.target.position.set(0, 0, 0); /* 座標(0,0,0)に照射 */
+            scene.add(directionalLight);        /* ライト本体と */
+            scene.add(directionalLight.target); /* 照射ターゲットもシーンに追加する必要がある */
+
+            /* マウスコントローラの追加 */
+            /* THREE.js 本体には含まれていないことに注意 */
+            const orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+            orbitControls.update();
+
+            /* アニメーションのための描画更新処理 */
+            function renderFrame() {
+                const deltaTime = clock.getDelta(); /* 前フレームからの経過時間。物体の移動に使う。 */
+                if (mixer) {
+                    mixer.update(deltaTime);
+                }
+                orbitControls.update(deltaTime);
+                renderer.render(scene, camera);
+                requestAnimationFrame(renderFrame);
+                if (AUTO_SCROLL_DEBUG) {
+                    taDebugText.scrollTop = taDebugText.scrollHeight;
+                }
+            }
+            renderFrame();
+
+            /* 画面サイズ変更時の処理 */
+            window.addEventListener('resize', function () {
+                taDebugText.value += ("ViewPort: " + window.innerWidth + "," + window.innerHeight + "\n");
+                const glViewSize = divGlView.getBoundingClientRect();
+                renderer.setSize(glViewSize.width, glViewSize.height);
+                camera.aspect = glViewSize.width / glViewSize.height;
+                camera.updateProjectionMatrix();
+            });
+        }
+        window.addEventListener('load', init);
+    </script>
+</body>

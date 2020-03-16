@@ -74,8 +74,7 @@ mylib2020.initThree = function (width, height, opts) {
     const camPosX = ('camPosX' in opts) ? opts.camPosX : 0;
     const camPosY = ('camPosY' in opts) ? opts.camPosY : 2;
     const camPosZ = ('camPosZ' in opts) ? opts.camPosZ : -7;
-    const gammaInput = ('gammaInput' in opts) ? opts.gammaInput : true;
-    const gammaOutput = ('gammaOutput' in opts) ? opts.gammaOutput : true;
+    const outputEncoding = ('outputEncoding' in opts) ? opts.outputEncoding : THREE.sRGBEncoding;
     const antialias = ('antialias' in opts) ? opts.antialias : true;
 
     let scene = new THREE.Scene();
@@ -90,8 +89,7 @@ mylib2020.initThree = function (width, height, opts) {
     renderer.setClearColor(new THREE.Color(clearColor));
     renderer.setSize(width, height);
     renderer.shadowMap.enabled = true;
-    renderer.gammaInput = gammaInput;
-    renderer.gammaOutput = gammaOutput;
+    renderer.outputEncoding = outputEncoding;
     camera.position.x = camPosX;
     camera.position.y = camPosY;
     camera.position.z = camPosZ;
