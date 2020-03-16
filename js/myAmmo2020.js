@@ -173,7 +173,7 @@ mylib2020.AmmoManager = class {
         Ammo.destroy(this.solver);
         Ammo.destroy(this.collisionConfiguration);
     }
-}
+};
 
 /**
  * Ammo の衝突検出形状や剛体（形状が変化しない物体）を生成する。
@@ -804,7 +804,7 @@ mylib2020.AmmoCollisionBuilder = class {
         Ammo.destroy(this.factor);
         Ammo.destroy(this.vertex);
     }
-}
+};
 
 /**
  * 物体同士の衝突を管理する。
@@ -891,7 +891,7 @@ mylib2020.AmmoCollisionManager = class {
         this.all = this.newCollisions;
         this.newCollisions = new Map();
     }
-}
+};
 
 /**
  * Ammo.btRigidBody の位置、姿勢を設定する。
@@ -938,7 +938,7 @@ mylib2020.AmmoRigidBodyPose = class {
         Ammo.destroy(this.quaternion);
         Ammo.destroy(this.transform);
     }
-}
+};
 
 mylib2020.initAmmo = function (gravity) {
     const collisionConfiguration = new Ammo.btDefaultCollisionConfiguration();
@@ -955,13 +955,13 @@ mylib2020.initAmmo = function (gravity) {
     world.setGravity(gv);
     Ammo.destroy(gv);
     return [world, dispatcher, overlappingPairCache, solver, collisionConfiguration];
-}
+};
 
 mylib2020.addAmmoRigidBody = function (threeObject, rigidBody) {
     mylib2020.removeAmmoRigidBody(threeObject);
     threeObject.userData.rigidBody = rigidBody;
     rigidBody.threeObject = threeObject;
-}
+};
 
 mylib2020.removeAmmoRigidBody = function (threeObject) {
     if (threeObject.userData.rigidBody) {
@@ -972,19 +972,19 @@ mylib2020.removeAmmoRigidBody = function (threeObject) {
         Ammo.destroy(threeObject.userData.rigidBody);
         delete threeObject.userData.rigidBody;
     }
-}
+};
 
 mylib2020.addAmmoShape = function (threeObject, shape) {
     mylib2020.removeAmmoShape(threeObject);
     threeObject.userData.collisionShape = shape;
-}
+};
 
 mylib2020.removeAmmoShapeRecursive = function (threeObject) {
     mylib2020.removeAmmoShape(threeObject);
     for (let child of threeObject.children) {
         mylib2020.removeAmmoShapeRecursive(child);
     }
-}
+};
 
 mylib2020.removeAmmoShape = function (threeObject) {
     if (threeObject.userData.collisionShape) {
@@ -995,19 +995,19 @@ mylib2020.removeAmmoShape = function (threeObject) {
         Ammo.destroy(threeObject.userData.collisionShapeOrg);
         delete threeObject.userData.collisionShapeOrg;
     }
-}
+};
 
 mylib2020.addImpulse = function (rigidBody, impulse = new THREE.Vector3(0, 0, 0)) {
     const imp = new Ammo.btVector3(impulse.x, impulse.y, impulse.z);
     rigidBody.applyCentralImpulse(imp);
     Ammo.destroy(imp);
-}
+};
 
 mylib2020.addForce = function (rigidBody, force = new THREE.Vector3(0, 0, 0)) {
     const f = new Ammo.btVector3(force.x, force.y, force.z);
     rigidBody.applyCentralForce(f);
     Ammo.destroy(f);
-}
+};
 
 mylib2020.applyAmmo = function (threeObject, rigidBody, btTransformBuffer) {
     rigidBody.getMotionState().getWorldTransform(btTransformBuffer);
@@ -1015,4 +1015,4 @@ mylib2020.applyAmmo = function (threeObject, rigidBody, btTransformBuffer) {
     const q = btTransformBuffer.getRotation();
     threeObject.position.set(p.x(), p.y(), p.z());
     threeObject.quaternion.set(q.x(), q.y(), q.z(), q.w());
-}
+};
