@@ -58,3 +58,4 @@ work*.html
 
 # downloaded glb files
 /assets/downloads/*.glb
+/assets/downloads/Mixamo/*

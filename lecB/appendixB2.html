@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scene</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/build/three.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/controls/OrbitControls.js"></script>
+    <!-- GLTF モデルロードに必要 -->
+    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/loaders/GLTFLoader.js"></script>
+    <!-- FBX モデルロードに必要 -->
+    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/libs/inflate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r114/examples/js/loaders/FBXLoader.js"></script>
+    <!-- 物理エンジン Ammo -->
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/gh/kripken/ammo.js@aab297a4164779c3a9d8dc8d9da26958de3cb778/builds/ammo.js"></script>
+    <!-- アニメーションライブラリ TweenMax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.2.4/gsap.min.js"></script>
+    <script type="text/javascript" src="../js/myThree2020.js"></script>
+    <script type="text/javascript" src="../js/myAmmo2020.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+</head>
+
+<body>
+    <div id="screen" class="screen">
+        <div id="glView" style="position: relative;height: 75%;">
+            <!--textarea id="debugText" rows="8" cols="20" class="debugText" style="display: none;">Debug output</textarea> デバッグ用表示を無くしたいときはこちらを有効にする。-->
+            <textarea id="debugText" rows="8" cols="20" class="debugText">Debug output</textarea>
+            <button id="startButton" class="startButton" onclick="javascript:load()">
+                Click to Play
+            </button>
+        </div>
+        <div id="controller" style="position: relative;height: 25%;background-color:chocolate">
+            <div id="up" class="gameButton" style="top: 5%; left: 16%; background-image:url(../assets/gray_arrow.png);">
+            </div>
+            <div id="down" class="gameButton"
+                style="top: 65%; left: 16%; background-image:url(../assets/gray_arrow.png); transform: rotate(180deg)">
+            </div>
+            <div id="left" class="gameButton"
+                style="top: 35%; left: 3%; background-image:url(../assets/gray_arrow.png); transform: rotate(-90deg)">
+            </div>
+            <div id="right" class="gameButton"
+                style="top: 35%; left: 29%; background-image:url(../assets/gray_arrow.png); transform: rotate(90deg)">
+            </div>
+            <select id="selectAction" class="selectBox" style="width: 52%;top: 25%; right: 3%;"></select>
+            <button id="action" type="button" class="pushButton" style="width: 13%;top: 45%; right: 3%;" value="0">
+                Act
+            </button>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function load() {
+            const taDebugText = document.getElementById("debugText");
+            const selectAction = document.getElementById("selectAction");
+            taDebugText.value = ("ViewPort: " + window.innerWidth + "," + window.innerHeight + "\n");
+            /* ロードするモデルとアニメーションの URL */
+            const modelRoot = "../assets/downloads/Mixamo/";
+            const paradinData = {
+                src: [
+                    { url: modelRoot + "Paradin/Sword And Shield Idle.glb", gltf: null },
+                    { url: modelRoot + "Paradin/Sword And Shield Run.glb", gltf: null },
+                    { url: modelRoot + "Paradin/Sword And Shield Slash.glb", gltf: null },
+                    { url: modelRoot + "Paradin/Sword And Shield Kick.glb", gltf: null }
+                ]
+            };
+            const zombieData = {
+                src: [
+                    { url: modelRoot + "Zombie/Zombie Idle.glb", gltf: null },
+                    { url: modelRoot + "Zombie/Zombie Running.glb", gltf: null },
+                    { url: modelRoot + "Zombie/Zombie Attack.glb", gltf: null },
+                    { url: modelRoot + "Zombie/Zombie Death.glb", gltf: null }
+                ]
+            };
+            const mutantData = {
+                src: [
+                    { url: modelRoot + "Mutant/Mutant Idle.glb", gltf: null },
+                    { url: modelRoot + "Mutant/Mutant Run.glb", gltf: null },
+                    { url: modelRoot + "Mutant/Mutant Punch.glb", gltf: null },
+                    { url: modelRoot + "Mutant/Mutant Swiping.glb", gltf: null }
+                ]
+            };
+
+            let character = null;
+            const characterData = paradinData;
+            mylib2020.loadMultiGltfPromise(characterData.src).then(function (response) {
+                taDebugText.value += response + "\n";
+                character = characterData.src[0].gltf.scene;
+                const mixer = new THREE.AnimationMixer(character);
+                const actions = [];
+                for (let i = 0; i < characterData.src.length; i++) {
+                    actions.push(mixer.clipAction(characterData.src[i].gltf.animations[0]));
+                    const fileNames = characterData.src[i].url.split("/");
+                    const option = document.createElement("option");
+                    option.text = fileNames[fileNames.length - 1];
+                    option.value = i;
+                    selectAction.appendChild(option);
+                }
+                character.userData.mixer = mixer;
+                character.userData.actions = actions;
+                character.userData.crntAction = null;
+                init();
+            }).catch(function (err) {
+                taDebugText.value += err + "\n";
+            });
+
+            function init() {
+                /* 主要な HTML 要素の取得 */
+                const divScreen = document.getElementById("screen");
+                const divGlView = document.getElementById("glView");
+                const btnAction = document.getElementById("action");
+                divGlView.removeChild(document.getElementById('startButton'));
+                btnAction.addEventListener("click", function () {
+                    if (character.userData.crntAction) {
+                        character.userData.crntAction.stop();
+                    }
+                    character.userData.crntAction = character.userData.actions[selectAction.value];
+                    character.userData.crntAction.play();
+                });
+
+                /* デバッグ用の出力 */
+                const AUTO_SCROLL_DEBUG = true; // taDebugText を常に最新の行までスクロールさせるかどうか。
+
+                /* THREE.js の初期化 */
+                const [scene, camera, renderer, clock, axes] = mylib2020.initThreeInElement(divGlView);
+                camera.position.set(5, 5, 5);
+                scene.add(character);
+
+                /* 平面の生成 */
+                const plane = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshPhongMaterial({ color: 0xCCFFCC }));
+                plane.rotateX(THREE.Math.degToRad(-90)); /* X 軸中心に90度回転 */
+                plane.receiveShadow = true; /* 他の物体の影が落ちる */
+                scene.add(plane);
+
+                /* 平行光源の生成 */
+                const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1.0); /* 色は白、強さは 1.0 */
+                directionalLight.castShadow = true; /* 他の物体に影を落とす */
+                directionalLight.position.set(5, 5, 5);        /* 座標(5,5,5)から */
+                directionalLight.target.position.set(0, 0, 0); /* 座標(0,0,0)に照射 */
+                scene.add(directionalLight);        /* ライト本体と */
+                scene.add(directionalLight.target); /* 照射ターゲットもシーンに追加する必要がある */
+
+                /* マウスコントローラの追加 */
+                /* THREE.js 本体には含まれていないことに注意 */
+                const orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+                orbitControls.update();
+
+                /* アニメーションのための描画更新処理 */
+                function renderFrame() {
+                    const deltaTime = clock.getDelta(); /* 前フレームからの経過時間。物体の移動に使う。 */
+                    character.userData.mixer.update(deltaTime);
+                    orbitControls.update(deltaTime);
+                    renderer.render(scene, camera);
+                    requestAnimationFrame(renderFrame);
+                    if (AUTO_SCROLL_DEBUG) {
+                        taDebugText.scrollTop = taDebugText.scrollHeight;
+                    }
+                }
+                renderFrame();
+
+                /* 画面サイズ変更時の処理 */
+                window.addEventListener('resize', function () {
+                    taDebugText.value += ("ViewPort: " + window.innerWidth + "," + window.innerHeight + "\n");
+                    const glViewSize = divGlView.getBoundingClientRect();
+                    renderer.setSize(glViewSize.width, glViewSize.height);
+                    camera.aspect = glViewSize.width / glViewSize.height;
+                    camera.updateProjectionMatrix();
+                });
+            }
+        }
+    </script>
+</body>

@@ -315,3 +315,46 @@ mylib2020.ArrowButton = class {
         this.release();
     }
 };
+
+/**
+ * GLTF モデルをロードする Promise を生成する。引数の src は連想配列で、ロードに成功すると src.gltf にロードされた gltf 全体が入る。
+ * @param {{url: string, gltf: null}} src url にはロードする GLTF の URL を指定し、gltf の初期値は null にしておく。
+ * @returns
+ */
+mylib2020.loadGltfPromise = function (src) {
+    return new Promise(function (resolve, reject) {
+        new THREE.GLTFLoader().load(src.url, // この関数は非同期的に実行される。
+            function (gltf) { // モデルロードに成功
+                const log = "loaded: " + src.url;
+                src.gltf = gltf;
+                resolve(log);
+            }, null, function (error) {
+                const log = "Failed to load: " + src.url + "," + error + "\n";
+                reject(log);
+            }
+        );
+    });
+};
+
+/**
+ * srcArray に指定した GLTF を全てロードする Promise を生成する。
+ * @param {Array.<{url: string, gltf: null}>} srcArray url にはロードする GLTF の URL を指定し、gltf の初期値を null にした連想配列の配列。
+ * @returns
+ */
+mylib2020.loadMultiGltfPromise = function (srcArray) {
+    return new Promise(function (resolve, reject) {
+        const loaders = [];
+        for (src of srcArray) {
+            loaders.push(mylib2020.loadGltfPromise(src));
+        }
+        Promise.all(loaders).then(function (response) {
+            let log = "";
+            for (r of response) {
+                log += r + "\n";
+            }
+            resolve(log);
+        }).catch(function (err) {
+            reject(err);
+        });
+    });
+};

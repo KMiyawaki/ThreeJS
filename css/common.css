@@ -40,7 +40,7 @@ body {
   font-size: x-small;
 }
 
-.arrowButton {
+.gameButton {
   position: absolute;
   font-size: x-large;
   user-select: none;
@@ -60,6 +60,12 @@ body {
   position: absolute;
   font-size: x-large;
   height: 30%;
+}
+
+.selectBox {
+  position: absolute;
+  font-size: large;
+  height: 15%;
 }
 
 .startButton {
