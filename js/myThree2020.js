@@ -358,3 +358,18 @@ mylib2020.loadMultiGltfPromise = function (srcArray) {
         });
     });
 };
+
+/**
+ * モデルが影を落とせるようにする。
+ * @param {THREE.Object3D} model 対象となるモデル。主に GLTF ファイル等からロードしたもの。
+ * @param {boolean} [castShadow=true] 他の物体に影を落とすか。
+ * @param {boolean} [receiveShadow=true] 他の物体の影を投影するか。
+ */
+mylib2020.enableModelShadow = function (model, castShadow = true, receiveShadow = true) {
+    model.traverse(function (node) {
+        if (node.isMesh) {
+            node.castShadow = castShadow;
+            node.receiveShadow = receiveShadow;
+        }
+    });
+}

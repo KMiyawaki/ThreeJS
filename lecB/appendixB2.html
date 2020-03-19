@@ -88,6 +88,7 @@
             mylib2020.loadMultiGltfPromise(characterData.src).then(function (response) {
                 taDebugText.value += response + "\n";
                 character = characterData.src[0].gltf.scene;
+                mylib2020.enableModelShadow(character);
                 const mixer = new THREE.AnimationMixer(character);
                 const actions = [];
                 for (let i = 0; i < characterData.src.length; i++) {
