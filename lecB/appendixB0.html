@@ -42,16 +42,17 @@
             camera.position.set(5, 5, 5);
 
             /* GLTF モデルデータをロードする。 THREE.GLTFLoader は Three.js 本体には含まれていないことに注意 */
-            let shuttle = null;
-            const modelUrl = "../assets/downloads/Shuttle_min.glb";
+            let model = null;
+            const modelUrl = "../assets/downloads/Microsoft/Shuttle_min.glb";
             new THREE.GLTFLoader().load(modelUrl, // この関数は非同期的に実行される。
                 function (gltf) { // モデルロードに成功
-                    shuttle = gltf.scene;
-                    shuttle.name = "Shuttle";
-                    shuttle.position.set(1, 1, 0.5);
-                    shuttle.rotateY(THREE.Math.degToRad(30));
-                    shuttle.add(new THREE.AxesHelper(1)); // ローカル座標軸を表示。
-                    scene.add(shuttle);
+                    model = gltf.scene;
+                    model.name = "Shuttle";
+                    model.position.set(1, 1, 0.5);
+                    model.rotateY(THREE.Math.degToRad(30));
+                    model.add(new THREE.AxesHelper(1)); // ローカル座標軸を表示。
+                    mylib2020.enableModelShadow(model, true, false);
+                    scene.add(model);
                     taDebugText.value += "Load:" + modelUrl + "\n";
                 }, null, function (error) {
                     taDebugText.value += "Failed to load:" + modelUrl + "\n";

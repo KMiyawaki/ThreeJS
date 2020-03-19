@@ -44,24 +44,25 @@
             camera.position.set(5, 5, 5);
 
             /* GLTF モデルデータをロードする。 THREE.GLTFLoader は Three.js 本体には含まれていないことに注意 */
-            let gltfModel = null;
-            let mixer = null;
-            let actions = null;
-            const modelUrl = "../assets/downloads/Bird_min.glb";
+            let character = null;
+            const modelUrl = "../assets/downloads/Microsoft/Bee_min.glb";
             new THREE.GLTFLoader().load(modelUrl, // この関数は非同期的に実行される。
                 function (gltf) { // モデルロードに成功
-                    gltfModel = gltf.scene;
-                    gltfModel.name = "gltfModel";
-                    gltfModel.position.set(1, 1, 0.5);
-                    gltfModel.scale.set(30, 30, 30);
-                    gltfModel.rotateY(THREE.Math.degToRad(30));
-                    gltfModel.add(new THREE.AxesHelper(1)); // ローカル座標軸を表示。
-                    mixer = new THREE.AnimationMixer(gltfModel);
-                    actions = [];
+                    character = gltf.scene;
+                    mylib2020.enableModelShadow(character, true, false);
+                    character.name = "character";
+                    character.position.set(1, 1, 0.5);
+                    character.scale.set(0.1, 0.1, 0.1);
+                    character.rotateY(THREE.Math.degToRad(30));
+                    character.add(new THREE.AxesHelper(1)); // ローカル座標軸を表示。
+                    const mixer = new THREE.AnimationMixer(character);
+                    const actions = [];
                     for (a of gltf.animations) {
                         actions.push(mixer.clipAction(a));
                     }
-                    scene.add(gltfModel);
+                    character.userData.mixer = mixer;
+                    character.userData.actions = actions;
+                    scene.add(character);
                     actions[0].play();
                     taDebugText.value += "Load:" + modelUrl + "\n";
                 }, null, function (error) {
@@ -92,8 +93,8 @@
             /* アニメーションのための描画更新処理 */
             function renderFrame() {
                 const deltaTime = clock.getDelta(); /* 前フレームからの経過時間。物体の移動に使う。 */
-                if (mixer) {
-                    mixer.update(deltaTime);
+                if (character) {
+                    character.userData.mixer.update(deltaTime);
                 }
                 orbitControls.update(deltaTime);
                 renderer.render(scene, camera);
