@@ -41,7 +41,7 @@
             /* 平面の生成 */
             /* ↓↓↓work17 の修正場所↓↓↓ */
             const plane = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshPhongMaterial({ color: 0xCCFFCC }));
-            /* ↑↑↑work17 の追記場所↑↑↑ */
+            /* ↑↑↑work17 の修正場所↑↑↑ */
             plane.rotateX(THREE.Math.degToRad(-90)); /* X 軸中心に90度回転 */
             plane.receiveShadow = true; /* 他の物体の影が落ちる */
             scene.add(plane);
@@ -49,7 +49,7 @@
             /* 球体の生成 */
             /* ↓↓↓work17 の修正場所↓↓↓ */
             const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 20, 20), new THREE.MeshPhongMaterial({ color: 0x0000FF, wireframe: false }));
-            /* ↑↑↑work17 の追記場所↑↑↑ */
+            /* ↑↑↑work17 の修正場所↑↑↑ */
             sphere.position.set(3, 3, 3); /* 座標(3,3,3)に移動 */
             sphere.castShadow = true; /* 他の物体に影を落とす */
             scene.add(sphere);
